@@ -9,7 +9,7 @@
         <div class="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
     </div>
 
-    <div class="relative max-w-5xl mx-auto px-6 pt-24 pb-32">
+    <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-32">
 
         {{-- Header --}}
         <div class="mb-16">

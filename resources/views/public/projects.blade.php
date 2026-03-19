@@ -9,7 +9,7 @@
         <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
     </div>
 
-    <div class="relative max-w-5xl mx-auto px-6 pt-24 pb-20">
+    <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
         <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">Projects</p>
         <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4">
             Things I've built.
@@ -18,7 +18,7 @@
     </div>
 </section>
 
-<section class="max-w-5xl mx-auto px-6 pb-24">
+<section class="max-w-7xl mx-auto px-6 pb-24">
     <div class="grid md:grid-cols-2 gap-5">
 
         {{-- EduChamp --}}

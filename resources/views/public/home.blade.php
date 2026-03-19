@@ -15,7 +15,7 @@
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px); background-size: 48px 48px;"></div>
     </div>
 
-    <div class="relative max-w-5xl mx-auto px-6 py-28 w-full">
+    <div class="relative max-w-7xl mx-auto px-6 py-28 w-full">
 
         {{-- Badge --}}
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 mb-8">
@@ -47,60 +47,33 @@
             </a>
         </div>
 
-        {{-- Skills --}}
+                        {{-- Skills: Marquee + büyük pill, hepsi aynı boyut, ton uyumlu --}}
         <div class="mt-14 pt-12 border-t border-white/[0.06]">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-6">What I work with</p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {{-- Mobile --}}
-                <div class="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
-                    <div class="flex items-center gap-2.5 mb-4">
-                        <div class="w-7 h-7 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <p class="text-xs font-semibold text-indigo-400 uppercase tracking-wide">Mobile</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['Flutter', 'GetX', 'Clean Architecture', 'iOS & Android'] as $s)
-                            <span class="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- Backend --}}
-                <div class="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
-                    <div class="flex items-center gap-2.5 mb-4">
-                        <div class="w-7 h-7 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </div>
-                        <p class="text-xs font-semibold text-violet-400 uppercase tracking-wide">Backend</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['REST APIs', 'Firebase', 'Laravel'] as $s)
-                            <span class="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- AI --}}
-                <div class="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
-                    <div class="flex items-center gap-2.5 mb-4">
-                        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                        </div>
-                        <p class="text-xs font-semibold text-emerald-400 uppercase tracking-wide">AI</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['LLM Integration', 'AI-Powered Apps'] as $s)
-                            <span class="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                        @endforeach
-                    </div>
+            <div class="overflow-hidden -mx-6">
+                <style>
+                    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+                    .marquee-track { animation: marquee 22s linear infinite; display: flex; width: max-content; }
+                    .marquee-track:hover { animation-play-state: paused; }
+                </style>
+                <div class="marquee-track px-6">
+                    @php
+                    $skills = [
+                        'Flutter',
+                        'Clean Architecture',
+                        'GetX',
+                        'REST APIs',
+                        'Firebase',
+                        'iOS & Android',
+                        'LLM Integration',
+                        'AI-Powered Apps',
+                    ];
+                    @endphp
+                    @foreach(array_merge($skills, $skills) as $s)
+                        <span class="inline-flex shrink-0 mx-2 px-6 py-3 rounded-full border border-white/[0.1] bg-white/[0.04] text-sm text-gray-300 font-semibold hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-white transition-all duration-200 cursor-default">
+                            {{ $s }}
+                        </span>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -124,7 +97,7 @@
 </section>
 
 {{-- Featured Projects --}}
-<section class="max-w-5xl mx-auto px-6 py-24">
+<section class="max-w-7xl mx-auto px-6 py-24">
     <div class="flex items-end justify-between mb-12">
         <div>
             <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-2">Work</p>
@@ -184,9 +157,20 @@
     </div>
 </section>
 
+{{-- Admin shortcut (geliştirme kolaylığı - sonra kaldırılacak) --}}
+<div class="fixed bottom-6 right-6 z-50">
+    <a href="{{ route('admin.dashboard') }}"
+       class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900 border border-white/[0.1] text-gray-400 hover:text-white hover:border-indigo-500/50 text-xs font-medium transition-all shadow-xl">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        Admin Panel
+    </a>
+</div>
+
 {{-- CTA strip --}}
 <section class="border-t border-white/5">
-    <div class="max-w-5xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center justify-between gap-8">
         <div>
             <h2 class="text-2xl font-black text-white mb-2">Have a project in mind?</h2>
             <p class="text-gray-500 text-sm">Let's build something great together.</p>

@@ -9,7 +9,7 @@
     <div class="pointer-events-none absolute inset-0">
         <div class="absolute -top-24 right-0 w-[500px] h-[500px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
     </div>
-    <div class="relative max-w-5xl mx-auto px-6 pt-24 pb-20">
+    <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
         <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">About Me</p>
         <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6 max-w-2xl">
             Building mobile experiences
@@ -25,7 +25,7 @@
 
 {{-- Skills --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
-    <div class="max-w-5xl mx-auto px-6 py-16">
+    <div class="max-w-7xl mx-auto px-6 py-16">
         <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Skills & Technologies</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -78,7 +78,7 @@
 </section>
 
 {{-- Experience Timeline --}}
-<section class="max-w-5xl mx-auto px-6 py-20">
+<section class="max-w-7xl mx-auto px-6 py-20">
     <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Experience</p>
 
     <div class="space-y-0">
@@ -124,7 +124,7 @@
 
 {{-- Education --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
-    <div class="max-w-5xl mx-auto px-6 py-16">
+    <div class="max-w-7xl mx-auto px-6 py-16">
         <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Education</p>
 
         <div class="flex items-center gap-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 max-w-lg">

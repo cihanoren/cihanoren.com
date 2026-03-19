@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'admin.ip'   => \App\Http\Middleware\AdminIpWhitelist::class,
+            'log.login'  => \App\Http\Middleware\LogLoginAttempts::class,
+            'require2fa' => \App\Http\Middleware\RequireTwoFactor::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
