@@ -6,7 +6,6 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
-
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ───────────────────────────────────────
@@ -19,11 +18,10 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // ─── Admin Routes ─────────────────────────────────────────
-Route::middleware(['auth', 'verified', 'log.login', 'require2fa'])
+Route::middleware(['auth', 'verified', 'require2fa'])
     ->prefix(env('ADMIN_PREFIX', 'admin'))
     ->name('admin.')
     ->group(function () {
-
         Route::get('/', fn() => view('dashboard'))->name('dashboard');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -38,14 +36,14 @@ Route::middleware(['auth', 'verified', 'log.login', 'require2fa'])
             Route::post('/2fa/disable', [TwoFactorController::class, 'disable'])->name('2fa.disable');
         });
 
-        // Geçici placeholder route'lar
+        // Projects
         Route::resource('projects', AdminProjectController::class)->except(['show']);
 
+        // Placeholder route'lar
         Route::get('/messages', fn() => view('dashboard'))->name('messages.index');
         Route::get('/experience', fn() => view('dashboard'))->name('experience.index');
         Route::get('/education', fn() => view('dashboard'))->name('education.index');
         Route::get('/settings', fn() => view('dashboard'))->name('settings.index');
-
     });
 
 require __DIR__.'/auth.php';

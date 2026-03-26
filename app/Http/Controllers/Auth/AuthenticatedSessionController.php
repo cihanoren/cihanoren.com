@@ -2,46 +2,67 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $request->authenticate();
+        } catch (ValidationException $e) {
+            // Başarısız giriş
+            DB::table('login_logs')->insert([
+                'email'          => $request->input('email', ''),
+                'ip_address'     => $request->ip(),
+                'user_agent'     => $request->userAgent(),
+                'status'         => 'failed',
+                'failure_reason' => 'Invalid credentials',
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            Activity::log('failed_login', 'User', 'Başarısız giriş denemesi. IP: ' . $request->ip());
+
+            throw $e;
+        }
 
         $request->session()->regenerate();
+
+        // Başarılı giriş
+        DB::table('login_logs')->insert([
+            'email'          => $request->input('email', ''),
+            'ip_address'     => $request->ip(),
+            'user_agent'     => $request->userAgent(),
+            'status'         => 'success',
+            'failure_reason' => null,
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ]);
+
+        Activity::log('login', 'User', 'Admin panele başarılı giriş yapıldı. IP: ' . $request->ip());
 
         return redirect()->intended(route('admin.dashboard', absolute: false));
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }

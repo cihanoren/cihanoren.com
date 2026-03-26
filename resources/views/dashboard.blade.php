@@ -106,23 +106,35 @@
         </div>
     </div>
 
-    {{-- Recent login logs --}}
+    {{-- Recent Activity --}}
     <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-        <h2 class="text-sm font-bold text-white mb-5">Recent Login Activity</h2>
+        <h2 class="text-sm font-bold text-white mb-5">Recent Activity</h2>
         @php
-            $logs = \DB::table('login_logs')->orderByDesc('created_at')->limit(5)->get();
+            $activities = \App\Models\ActivityLog::orderByDesc('created_at')->limit(8)->get();
         @endphp
-        @if($logs->isEmpty())
-            <p class="text-sm text-gray-600">No login activity yet.</p>
+        @if($activities->isEmpty())
+            <p class="text-sm text-gray-600">No activity yet.</p>
         @else
-            <div class="space-y-2">
-                @foreach($logs as $log)
-                <div class="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-1.5 h-1.5 rounded-full {{ $log->status === 'success' ? 'bg-emerald-400' : 'bg-red-400' }}"></span>
-                        <span class="text-xs text-gray-400">{{ $log->ip_address }}</span>
+            <div class="space-y-1">
+                @foreach($activities as $activity)
+                @php
+                    $colors = [
+                        'created'      => ['dot' => 'bg-emerald-400', 'text' => 'text-emerald-400'],
+                        'updated'      => ['dot' => 'bg-indigo-400',  'text' => 'text-indigo-400'],
+                        'deleted'      => ['dot' => 'bg-red-400',     'text' => 'text-red-400'],
+                        'login'        => ['dot' => 'bg-violet-400',  'text' => 'text-violet-400'],
+                        'failed_login' => ['dot' => 'bg-orange-400',  'text' => 'text-orange-400'],
+                    ];
+                    $color = $colors[$activity->action] ?? ['dot' => 'bg-gray-500', 'text' => 'text-gray-500'];
+                @endphp
+                <div class="flex items-center justify-between py-2.5 border-b border-white/[0.04] last:border-0">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-1.5 h-1.5 rounded-full shrink-0 {{ $color['dot'] }}"></span>
+                        <span class="text-xs text-gray-400 truncate">{{ $activity->description }}</span>
                     </div>
-                    <span class="text-xs text-gray-600">{{ \Carbon\Carbon::parse($log->created_at)->diffForHumans() }}</span>
+                    <span class="text-xs text-gray-600 shrink-0 ml-3">
+                        {{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}
+                    </span>
                 </div>
                 @endforeach
             </div>

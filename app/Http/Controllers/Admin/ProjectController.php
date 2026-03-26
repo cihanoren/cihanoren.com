@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Activity;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -30,12 +31,12 @@ class ProjectController extends Controller
             'tags'         => ['nullable', 'string'],
             'project_url'  => ['nullable', 'url'],
             'github_url'   => ['nullable', 'url'],
+            'appstore_url' => ['nullable', 'url'],
+            'playstore_url'=> ['nullable', 'url'],
             'featured'     => ['boolean'],
             'order'        => ['integer'],
             'published'    => ['boolean'],
             'cover_image'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'appstore_url'  => ['nullable', 'url'],
-            'playstore_url' => ['nullable', 'url'],
         ]);
 
         $validated['slug']      = Str::slug($validated['title']);
@@ -48,7 +49,9 @@ class ProjectController extends Controller
                 ->store('projects', 'public');
         }
 
-        Project::create($validated);
+        $project = Project::create($validated);
+
+        Activity::log('created', 'Project', "\"{$project->title}\" projesi eklendi.");
 
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Project created successfully.');
@@ -68,12 +71,12 @@ class ProjectController extends Controller
             'tags'         => ['nullable', 'string'],
             'project_url'  => ['nullable', 'url'],
             'github_url'   => ['nullable', 'url'],
+            'appstore_url' => ['nullable', 'url'],
+            'playstore_url'=> ['nullable', 'url'],
             'featured'     => ['boolean'],
             'order'        => ['integer'],
             'published'    => ['boolean'],
             'cover_image'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'appstore_url'  => ['nullable', 'url'],
-            'playstore_url' => ['nullable', 'url'],
         ]);
 
         $validated['slug']      = Str::slug($validated['title']);
@@ -82,7 +85,6 @@ class ProjectController extends Controller
         $validated['published'] = $request->boolean('published');
 
         if ($request->hasFile('cover_image')) {
-            // Eski resmi sil
             if ($project->cover_image) {
                 Storage::disk('public')->delete($project->cover_image);
             }
@@ -90,7 +92,6 @@ class ProjectController extends Controller
                 ->store('projects', 'public');
         }
 
-        // Resmi kaldır butonuna basıldıysa
         if ($request->boolean('remove_cover_image')) {
             if ($project->cover_image) {
                 Storage::disk('public')->delete($project->cover_image);
@@ -100,17 +101,23 @@ class ProjectController extends Controller
 
         $project->update($validated);
 
+        Activity::log('updated', 'Project', "\"{$project->title}\" projesi güncellendi.");
+
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project)
     {
+        $title = $project->title;
+
         if ($project->cover_image) {
             Storage::disk('public')->delete($project->cover_image);
         }
 
         $project->delete();
+
+        Activity::log('deleted', 'Project', "\"{$title}\" projesi silindi.");
 
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Project deleted.');
