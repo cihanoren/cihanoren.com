@@ -5,10 +5,15 @@
 
 @section('content')
 
+@php
+    $projectCount = \App\Models\Project::count();
+    $publishedCount = \App\Models\Project::where('published', true)->count();
+@endphp
+
 {{-- Stats --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
-    <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+    <a href="{{ route('admin.projects.index') }}" class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-indigo-500/30 transition-colors">
         <div class="flex items-center justify-between mb-4">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Projects</p>
             <div class="w-8 h-8 rounded-lg bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
@@ -17,9 +22,9 @@
                 </svg>
             </div>
         </div>
-        <p class="text-3xl font-black text-white">0</p>
-        <p class="text-xs text-gray-600 mt-1">Total projects</p>
-    </div>
+        <p class="text-3xl font-black text-white">{{ $projectCount }}</p>
+        <p class="text-xs text-gray-600 mt-1">{{ $publishedCount }} published</p>
+    </a>
 
     <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
         <div class="flex items-center justify-between mb-4">

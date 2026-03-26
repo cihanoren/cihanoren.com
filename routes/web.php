@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\TwoFactorController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ───────────────────────────────────────
@@ -37,8 +39,8 @@ Route::middleware(['auth', 'verified', 'log.login', 'require2fa'])
         });
 
         // Geçici placeholder route'lar
-        Route::get('/projects', fn() => view('dashboard'))->name('projects.index');
-        Route::get('/projects/create', fn() => view('dashboard'))->name('projects.create');
+        Route::resource('projects', AdminProjectController::class)->except(['show']);
+
         Route::get('/messages', fn() => view('dashboard'))->name('messages.index');
         Route::get('/experience', fn() => view('dashboard'))->name('experience.index');
         Route::get('/education', fn() => view('dashboard'))->name('education.index');
