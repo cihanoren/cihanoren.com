@@ -27,9 +27,7 @@
 <section class="border-t border-white/5 bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 py-16">
         <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Skills & Technologies</p>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {{-- Mobile --}}
             <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
                 <div class="w-9 h-9 rounded-lg bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center mb-5">
                     <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,8 +41,6 @@
                     @endforeach
                 </div>
             </div>
-
-            {{-- Backend & APIs --}}
             <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
                 <div class="w-9 h-9 rounded-lg bg-violet-500/15 border border-violet-500/20 flex items-center justify-center mb-5">
                     <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,8 +54,6 @@
                     @endforeach
                 </div>
             </div>
-
-            {{-- AI --}}
             <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
                 <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mb-5">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,54 +73,87 @@
 
 {{-- Experience Timeline --}}
 <section class="max-w-7xl mx-auto px-6 py-20">
-    <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Experience</p>
+    <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Experience</p>
 
-    <div class="space-y-0">
+    @if($experiences->isEmpty())
+        <p class="text-gray-600 text-sm">No experience added yet.</p>
+    @else
+        <div class="space-y-0">
+            @foreach($experiences as $index => $exp)
+            <div class="group relative grid grid-cols-[auto_1fr] md:grid-cols-[200px_auto_1fr] gap-5 md:gap-8 pb-12">
+                
+                {{-- 1. Date (Desktop Only) --}}
+                <div class="hidden md:block text-right pt-1">
+                    <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3.5 py-1.5 rounded-lg inline-block transition-colors group-hover:bg-white/[0.04]">
+                        {{ $exp->date_range }}
+                    </span>
+                </div>
 
-        {{-- Item 1 --}}
-        <div class="relative grid md:grid-cols-[200px_1fr] gap-6 pb-12">
-            {{-- Timeline line --}}
-            <div class="hidden md:block absolute left-[188px] top-3 bottom-0 w-px bg-white/[0.07]"></div>
-            {{-- Dot --}}
-            <div class="hidden md:flex absolute left-[183px] top-2.5 w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-gray-950"></div>
+                {{-- 2. Timeline Line & Dot --}}
+                <div class="relative flex flex-col items-center w-6">
+                    {{-- Line (Starts below the dot and connects to the next item via negative bottom) --}}
+                    @if(!$loop->last)
+                        <div class="absolute top-8 -bottom-12 w-px bg-white/10 group-hover:bg-indigo-500/40 transition-colors duration-500"></div>
+                    @endif
+                    
+                    {{-- Dot --}}
+                    <div class="w-6 h-6 rounded-full bg-gray-950 border-2 {{ $exp->current ? 'border-indigo-500' : 'border-white/10 group-hover:border-white/30' }} flex items-center justify-center relative z-10 mt-0.5 transition-colors duration-300">
+                        <div class="w-2 h-2 rounded-full {{ $exp->current ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]' : 'bg-white/20 group-hover:bg-white/50' }} transition-all duration-300"></div>
+                    </div>
+                </div>
 
-            <div class="md:text-right">
-                <p class="text-xs font-semibold text-indigo-400 tracking-wide uppercase">2023 — Present</p>
+                {{-- 3. Content --}}
+                <div class="pt-0.5">
+                    {{-- Mobile Date (Hidden on Desktop) --}}
+                    <div class="md:hidden mb-3">
+                         <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
+                            {{ $exp->date_range }}
+                        </span>
+                    </div>
+
+                    {{-- Header --}}
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
+                        <h3 class="text-white font-bold text-xl">{{ $exp->position }}</h3>
+                        @if($exp->current)
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-bold tracking-wider uppercase w-fit">
+                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                                Current
+                            </span>
+                        @endif
+                    </div>
+
+                    {{-- Company & Location info --}}
+                    <div class="flex items-center flex-wrap gap-2 text-sm mb-4">
+                        <span class="flex items-center gap-1.5 font-medium text-gray-300">
+                            <svg class="w-4 h-4 text-indigo-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            {{ $exp->company }}
+                        </span>
+                        @if($exp->location)
+                            <span class="text-gray-600 px-1">•</span>
+                            <span class="flex items-center gap-1.5 text-gray-400">
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                {{ $exp->location }}
+                            </span>
+                        @endif
+                    </div>
+
+                    {{-- Description Card --}}
+                    @if($exp->description)
+                        <div class="text-gray-400 text-sm leading-relaxed bg-white/[0.015] border border-white/[0.04] rounded-xl p-5 group-hover:border-white/[0.08] group-hover:bg-white/[0.025] transition-all duration-300 shadow-sm">
+                            {{ $exp->description }}
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div class="md:pl-10">
-                <h3 class="text-white font-bold text-lg leading-tight">Flutter Developer</h3>
-                <p class="text-gray-500 text-sm mt-0.5 mb-3">Company Name</p>
-                <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
-                    Placeholder — admin panelden güncellenecek.
-                </p>
-            </div>
+            @endforeach
         </div>
-
-        {{-- Item 2 --}}
-        <div class="relative grid md:grid-cols-[200px_1fr] gap-6 pb-12">
-            <div class="hidden md:block absolute left-[188px] top-3 bottom-0 w-px bg-white/[0.07]"></div>
-            <div class="hidden md:flex absolute left-[183px] top-2.5 w-3 h-3 rounded-full bg-white/20 ring-4 ring-gray-950"></div>
-
-            <div class="md:text-right">
-                <p class="text-xs font-semibold text-gray-500 tracking-wide uppercase">2021 — 2023</p>
-            </div>
-            <div class="md:pl-10">
-                <h3 class="text-white font-bold text-lg leading-tight">Mobile Developer</h3>
-                <p class="text-gray-500 text-sm mt-0.5 mb-3">Company Name</p>
-                <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
-                    Placeholder — admin panelden güncellenecek.
-                </p>
-            </div>
-        </div>
-
-    </div>
+    @endif
 </section>
 
 {{-- Education --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 py-16">
         <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Education</p>
-
         <div class="flex items-center gap-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 max-w-lg">
             <div class="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center shrink-0">
                 <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -8,6 +8,7 @@
 @php
     $projectCount = \App\Models\Project::count();
     $publishedCount = \App\Models\Project::where('published', true)->count();
+    $experienceCount = \App\Models\Experience::count();
 @endphp
 
 {{-- Stats --}}
@@ -48,8 +49,7 @@
                 </svg>
             </div>
         </div>
-        <p class="text-3xl font-black text-white">0</p>
-        <p class="text-xs text-gray-600 mt-1">Work entries</p>
+        <p class="text-3xl font-black text-white">{{ $experienceCount }}</p>
     </div>
 
     <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">

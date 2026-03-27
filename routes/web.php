@@ -5,13 +5,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\TwoFactorController;
+use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ───────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', fn() => view('public.about'))->name('about');
-Route::get('/resume', fn() => view('public.resume'))->name('resume');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/resume', [HomeController::class, 'resume'])->name('resume');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -41,7 +42,7 @@ Route::middleware(['auth', 'verified', 'require2fa'])
 
         // Placeholder route'lar
         Route::get('/messages', fn() => view('dashboard'))->name('messages.index');
-        Route::get('/experience', fn() => view('dashboard'))->name('experience.index');
+        Route::resource('experience', AdminExperienceController::class)->except(['show']);
         Route::get('/education', fn() => view('dashboard'))->name('education.index');
         Route::get('/settings', fn() => view('dashboard'))->name('settings.index');
     });

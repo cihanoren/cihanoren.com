@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Experience;
 use App\Models\Project;
 
 class HomeController extends Controller
@@ -14,5 +15,23 @@ class HomeController extends Controller
             ->get();
 
         return view('public.home', compact('featuredProjects'));
+    }
+
+    public function about()
+    {
+        $experiences = Experience::orderBy('order')
+            ->orderByDesc('start_date')
+            ->get();
+
+        return view('public.about', compact('experiences'));
+    }
+
+    public function resume()
+    {
+        $experiences = Experience::orderBy('order')
+            ->orderByDesc('start_date')
+            ->get();
+
+        return view('public.resume', compact('experiences'));
     }
 }
