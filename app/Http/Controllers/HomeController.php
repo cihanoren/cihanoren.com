@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Project;
 
@@ -23,7 +24,11 @@ class HomeController extends Controller
             ->orderByDesc('start_date')
             ->get();
 
-        return view('public.about', compact('experiences'));
+        $educations = Education::orderBy('order')
+            ->orderByDesc('start_date')
+            ->get();
+
+        return view('public.about', compact('experiences', 'educations'));
     }
 
     public function resume()
@@ -32,6 +37,10 @@ class HomeController extends Controller
             ->orderByDesc('start_date')
             ->get();
 
-        return view('public.resume', compact('experiences'));
+        $educations = Education::orderBy('order')
+            ->orderByDesc('start_date')
+            ->get();
+
+        return view('public.resume', compact('experiences', 'educations'));
     }
 }

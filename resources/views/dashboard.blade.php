@@ -9,6 +9,7 @@
     $projectCount = \App\Models\Project::count();
     $publishedCount = \App\Models\Project::where('published', true)->count();
     $experienceCount = \App\Models\Experience::count();
+    $unreadCount = \App\Models\Message::where('is_read', false)->where('is_archived', false)->count();
 @endphp
 
 {{-- Stats --}}
@@ -27,7 +28,7 @@
         <p class="text-xs text-gray-600 mt-1">{{ $publishedCount }} published</p>
     </a>
 
-    <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+    <a href="{{ route('admin.messages.index', ['filter' => 'unread']) }}" class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-violet-500/30 transition-colors">
         <div class="flex items-center justify-between mb-4">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Messages</p>
             <div class="w-8 h-8 rounded-lg bg-violet-500/15 border border-violet-500/20 flex items-center justify-center">
@@ -36,9 +37,9 @@
                 </svg>
             </div>
         </div>
-        <p class="text-3xl font-black text-white">0</p>
+        <p class="text-3xl font-black text-white">{{ $unreadCount }}</p>
         <p class="text-xs text-gray-600 mt-1">Unread messages</p>
-    </div>
+    </a>
 
     <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
         <div class="flex items-center justify-between mb-4">

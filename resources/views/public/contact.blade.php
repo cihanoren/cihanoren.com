@@ -36,7 +36,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('contact.store') }}" method="POST" class="space-y-5">
+                <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contact-form">
                     @csrf
 
                     <div>
@@ -63,12 +63,21 @@
                         @error('message') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
                     </div>
 
-                    <button type="submit"
-                            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-indigo-600/20">
-                        Send Message
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                        </svg>
+                    <button type="submit" id="submit-btn"
+                            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span id="btn-text" class="inline-flex items-center gap-2">
+                            Send Message
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </span>
+                        <span id="btn-loading" class="hidden inline-flex items-center gap-2">
+                            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            Sending...
+                        </span>
                     </button>
                 </form>
             </div>
@@ -118,5 +127,16 @@
         </div>
     </div>
 </section>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    btn.disabled = true;
+    btnText.classList.add('hidden');
+    btnLoading.classList.remove('hidden');
+});
+</script>
 
 @endsection

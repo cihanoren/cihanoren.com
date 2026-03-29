@@ -5,8 +5,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\TwoFactorController;
-use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
+use App\Http\Controllers\Admin\EducationController as AdminEducationController;
+use App\Http\Controllers\Admin\MessageController as AdminMessageController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Routes ───────────────────────────────────────
@@ -23,6 +25,7 @@ Route::middleware(['auth', 'verified', 'require2fa'])
     ->prefix(env('ADMIN_PREFIX', 'admin'))
     ->name('admin.')
     ->group(function () {
+
         Route::get('/', fn() => view('dashboard'))->name('dashboard');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -40,10 +43,23 @@ Route::middleware(['auth', 'verified', 'require2fa'])
         // Projects
         Route::resource('projects', AdminProjectController::class)->except(['show']);
 
-        // Placeholder route'lar
-        Route::get('/messages', fn() => view('dashboard'))->name('messages.index');
+        // Experience
         Route::resource('experience', AdminExperienceController::class)->except(['show']);
-        Route::get('/education', fn() => view('dashboard'))->name('education.index');
+
+        // Education
+        Route::resource('education', AdminEducationController::class)->except(['show']);
+
+        // Messages
+        Route::get('/messages', [AdminMessageController::class, 'index'])->name('messages.index');
+        Route::get('/messages/{message}', [AdminMessageController::class, 'show'])->name('messages.show');
+        Route::post('/messages/{message}/read', [AdminMessageController::class, 'markRead'])->name('messages.read');
+        Route::post('/messages/{message}/unread', [AdminMessageController::class, 'markUnread'])->name('messages.unread');
+        Route::post('/messages/{message}/archive', [AdminMessageController::class, 'archive'])->name('messages.archive');
+        Route::post('/messages/{message}/unarchive', [AdminMessageController::class, 'unarchive'])->name('messages.unarchive');
+        Route::post('/messages/{message}/reply', [AdminMessageController::class, 'reply'])->name('messages.reply');
+        Route::delete('/messages/{message}', [AdminMessageController::class, 'destroy'])->name('messages.destroy');
+
+        // Settings placeholder
         Route::get('/settings', fn() => view('dashboard'))->name('settings.index');
     });
 

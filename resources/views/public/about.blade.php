@@ -71,7 +71,7 @@
     </div>
 </section>
 
-{{-- Experience Timeline --}}
+{{-- Experience --}}
 <section class="max-w-7xl mx-auto px-6 py-20">
     <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Experience</p>
 
@@ -81,37 +81,25 @@
         <div class="space-y-0">
             @foreach($experiences as $index => $exp)
             <div class="group relative grid grid-cols-[auto_1fr] md:grid-cols-[200px_auto_1fr] gap-5 md:gap-8 pb-12">
-                
-                {{-- 1. Date (Desktop Only) --}}
                 <div class="hidden md:block text-right pt-1">
                     <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3.5 py-1.5 rounded-lg inline-block transition-colors group-hover:bg-white/[0.04]">
                         {{ $exp->date_range }}
                     </span>
                 </div>
-
-                {{-- 2. Timeline Line & Dot --}}
                 <div class="relative flex flex-col items-center w-6">
-                    {{-- Line (Starts below the dot and connects to the next item via negative bottom) --}}
                     @if(!$loop->last)
                         <div class="absolute top-8 -bottom-12 w-px bg-white/10 group-hover:bg-indigo-500/40 transition-colors duration-500"></div>
                     @endif
-                    
-                    {{-- Dot --}}
                     <div class="w-6 h-6 rounded-full bg-gray-950 border-2 {{ $exp->current ? 'border-indigo-500' : 'border-white/10 group-hover:border-white/30' }} flex items-center justify-center relative z-10 mt-0.5 transition-colors duration-300">
                         <div class="w-2 h-2 rounded-full {{ $exp->current ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]' : 'bg-white/20 group-hover:bg-white/50' }} transition-all duration-300"></div>
                     </div>
                 </div>
-
-                {{-- 3. Content --}}
                 <div class="pt-0.5">
-                    {{-- Mobile Date (Hidden on Desktop) --}}
                     <div class="md:hidden mb-3">
-                         <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
+                        <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
                             {{ $exp->date_range }}
                         </span>
                     </div>
-
-                    {{-- Header --}}
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
                         <h3 class="text-white font-bold text-xl">{{ $exp->position }}</h3>
                         @if($exp->current)
@@ -121,8 +109,6 @@
                             </span>
                         @endif
                     </div>
-
-                    {{-- Company & Location info --}}
                     <div class="flex items-center flex-wrap gap-2 text-sm mb-4">
                         <span class="flex items-center gap-1.5 font-medium text-gray-300">
                             <svg class="w-4 h-4 text-indigo-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -136,8 +122,6 @@
                             </span>
                         @endif
                     </div>
-
-                    {{-- Description Card --}}
                     @if($exp->description)
                         <div class="text-gray-400 text-sm leading-relaxed bg-white/[0.015] border border-white/[0.04] rounded-xl p-5 group-hover:border-white/[0.08] group-hover:bg-white/[0.025] transition-all duration-300 shadow-sm">
                             {{ $exp->description }}
@@ -153,18 +137,56 @@
 {{-- Education --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 py-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Education</p>
-        <div class="flex items-center gap-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 max-w-lg">
-            <div class="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0H9m3 0h3"/>
-                </svg>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Education</p>
+
+        @if($educations->isEmpty())
+            <p class="text-gray-600 text-sm">No education added yet.</p>
+        @else
+            <div class="space-y-0">
+                @foreach($educations as $edu)
+                <div class="group relative grid grid-cols-[auto_1fr] md:grid-cols-[200px_auto_1fr] gap-5 md:gap-8 pb-10">
+                    <div class="hidden md:block text-right pt-1">
+                        <span class="text-xs font-semibold tracking-widest text-gray-500 uppercase bg-white/[0.02] border border-white/[0.05] px-3.5 py-1.5 rounded-lg inline-block transition-colors group-hover:bg-white/[0.04]">
+                            {{ $edu->date_range }}
+                        </span>
+                    </div>
+                    <div class="relative flex flex-col items-center w-6">
+                        @if(!$loop->last)
+                            <div class="absolute top-8 -bottom-10 w-px bg-white/10 group-hover:bg-indigo-500/30 transition-colors duration-500"></div>
+                        @endif
+                        <div class="w-6 h-6 rounded-full bg-gray-950 border-2 border-white/10 group-hover:border-white/30 flex items-center justify-center relative z-10 mt-0.5 transition-colors duration-300">
+                            <div class="w-2 h-2 rounded-full bg-white/20 group-hover:bg-white/50 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                    <div class="pt-0.5">
+                        <div class="md:hidden mb-3">
+                            <span class="text-xs font-semibold tracking-widest text-gray-500 uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
+                                {{ $edu->date_range }}
+                            </span>
+                        </div>
+                        <h3 class="text-white font-bold text-xl mb-2">{{ $edu->school }}</h3>
+                        <div class="flex items-center flex-wrap gap-2 text-sm mb-2">
+                            <span class="flex items-center gap-1.5 font-medium text-indigo-400">
+                                <svg class="w-4 h-4 text-indigo-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0H9m3 0h3"/>
+                                </svg>
+                                {{ $edu->department }}
+                            </span>
+                            @if($edu->degree)
+                                <span class="text-gray-600">·</span>
+                                <span class="text-gray-500 text-xs">{{ $edu->degree }}</span>
+                            @endif
+                        </div>
+                        @if($edu->description)
+                            <div class="text-gray-400 text-sm leading-relaxed bg-white/[0.015] border border-white/[0.04] rounded-xl p-5 group-hover:border-white/[0.08] group-hover:bg-white/[0.025] transition-all duration-300 shadow-sm">
+                                {{ $edu->description }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
             </div>
-            <div>
-                <h3 class="text-white font-bold">University Name</h3>
-                <p class="text-gray-500 text-sm mt-0.5">Department — 20XX – 20XX</p>
-            </div>
-        </div>
+        @endif
     </div>
 </section>
 
