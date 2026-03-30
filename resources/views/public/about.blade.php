@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'About — CihanÖren')
+@section('title', __('messages.about_label') . ' — CihanÖren')
 
 @section('content')
 
@@ -10,15 +10,13 @@
         <div class="absolute -top-24 right-0 w-[500px] h-[500px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
-        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">About Me</p>
+        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">{{ __('messages.about_label') }}</p>
         <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6 max-w-2xl">
-            Building mobile experiences
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400"> that actually work.</span>
+            {{ __('messages.about_title') }}
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400"> {{ __('messages.about_title2') }}</span>
         </h1>
         <p class="text-gray-400 text-lg max-w-xl leading-relaxed">
-            I'm a Flutter developer focused on building clean, scalable mobile applications.
-            I care deeply about architecture, code quality, and delivering great user experiences
-            across iOS and Android.
+            {{ __('messages.about_sub') }}
         </p>
     </div>
 </section>
@@ -26,7 +24,7 @@
 {{-- Skills --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 py-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">Skills & Technologies</p>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">{{ __('messages.about_skills') }}</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
                 <div class="w-9 h-9 rounded-lg bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center mb-5">
@@ -73,10 +71,10 @@
 
 {{-- Experience --}}
 <section class="max-w-7xl mx-auto px-6 py-20">
-    <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Experience</p>
+    <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.about_experience') }}</p>
 
     @if($experiences->isEmpty())
-        <p class="text-gray-600 text-sm">No experience added yet.</p>
+        <p class="text-gray-600 text-sm">{{ __('messages.about_no_exp') }}</p>
     @else
         <div class="space-y-0">
             @foreach($experiences as $index => $exp)
@@ -105,7 +103,7 @@
                         @if($exp->current)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-bold tracking-wider uppercase w-fit">
                                 <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-                                Current
+                                {{ __('messages.current') }}
                             </span>
                         @endif
                     </div>
@@ -137,10 +135,10 @@
 {{-- Education --}}
 <section class="border-t border-white/5 bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 py-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Education</p>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.about_education') }}</p>
 
         @if($educations->isEmpty())
-            <p class="text-gray-600 text-sm">No education added yet.</p>
+            <p class="text-gray-600 text-sm">{{ __('messages.about_no_edu') }}</p>
         @else
             <div class="space-y-0">
                 @foreach($educations as $edu)

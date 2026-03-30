@@ -18,14 +18,13 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
             </svg>
-            All Projects
+            {{ __('messages.project_back') }}
         </a>
 
         <div class="grid lg:grid-cols-[1fr_320px] gap-12">
 
             {{-- Sol: İçerik --}}
             <div>
-                {{-- Cover image --}}
                 @if($project->cover_image)
                     <div class="w-full rounded-2xl overflow-hidden border border-white/[0.08] mb-10">
                         <img src="{{ Storage::url($project->cover_image) }}"
@@ -34,7 +33,6 @@
                     </div>
                 @endif
 
-                {{-- Tags --}}
                 @if($project->tags)
                     <div class="flex flex-wrap gap-2 mb-5">
                         @foreach($project->tags as $tag)
@@ -45,7 +43,6 @@
                     </div>
                 @endif
 
-                {{-- Başlık --}}
                 <h1 class="text-4xl md:text-5xl font-black text-white leading-tight mb-4">
                     {{ $project->title }}
                 </h1>
@@ -54,7 +51,6 @@
                     {{ $project->description }}
                 </p>
 
-                {{-- Full content --}}
                 @if($project->content)
                     <div class="prose prose-invert prose-sm max-w-none text-gray-400 leading-relaxed">
                         {!! nl2br(e($project->content)) !!}
@@ -65,10 +61,9 @@
             {{-- Sağ: Linkler & Bilgiler --}}
             <div class="space-y-4">
 
-                {{-- Links --}}
                 @if($project->project_url || $project->github_url || $project->appstore_url || $project->playstore_url)
                 <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Links</p>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">{{ __('messages.project_links') }}</p>
                     <div class="space-y-2.5">
 
                         @if($project->project_url)
@@ -79,7 +74,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>
                                 </svg>
                             </div>
-                            <span class="text-sm text-gray-400 group-hover:text-white transition-colors">Visit Website</span>
+                            <span class="text-sm text-gray-400 group-hover:text-white transition-colors">{{ __('messages.project_website') }}</span>
                             <svg class="w-3.5 h-3.5 text-gray-600 ml-auto group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
@@ -137,11 +132,11 @@
 
                 {{-- CTA --}}
                 <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
-                    <p class="text-sm font-semibold text-white mb-2">Interested in working together?</p>
-                    <p class="text-xs text-gray-500 mb-4">Let's build something great.</p>
+                    <p class="text-sm font-semibold text-white mb-2">{{ __('messages.project_cta_title') }}</p>
+                    <p class="text-xs text-gray-500 mb-4">{{ __('messages.project_cta_sub') }}</p>
                     <a href="{{ route('contact') }}"
                        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-all">
-                        Get in Touch
+                        {{ __('messages.project_cta_btn') }}
                     </a>
                 </div>
 

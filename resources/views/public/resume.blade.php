@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Resume — CihanÖren')
+@section('title', __('messages.resume_label') . ' — CihanÖren')
 
 @section('content')
 <section class="max-w-7xl mx-auto px-6 pt-24 pb-32">
@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-20">
         <div>
-            <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-3">Resume</p>
+            <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-3">{{ __('messages.resume_label') }}</p>
             <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">Cihan Ören</h1>
             <p class="text-gray-400 mt-2 text-lg">Flutter Developer & Mobile Architect</p>
         </div>
@@ -17,7 +17,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v4m0 0l-3-3m3 3l3-3M12 4v8"/>
             </svg>
-            Download PDF
+            {{ __('messages.resume_download') }}
         </a>
     </div>
 
@@ -25,10 +25,10 @@
 
     {{-- Experience --}}
     <div class="mb-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Experience</p>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.resume_experience') }}</p>
 
         @if($experiences->isEmpty())
-            <p class="text-gray-600 text-sm">No experience added yet.</p>
+            <p class="text-gray-600 text-sm">{{ __('messages.resume_no_exp') }}</p>
         @else
             <div class="space-y-0">
                 @foreach($experiences as $index => $exp)
@@ -57,7 +57,7 @@
                             @if($exp->current)
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-bold tracking-wider uppercase w-fit">
                                     <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-                                    Current
+                                    {{ __('messages.current') }}
                                 </span>
                             @endif
                         </div>
@@ -90,10 +90,10 @@
 
     {{-- Education --}}
     <div class="mb-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">Education</p>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.resume_education') }}</p>
 
         @if($educations->isEmpty())
-            <p class="text-gray-600 text-sm">No education added yet.</p>
+            <p class="text-gray-600 text-sm">{{ __('messages.resume_no_edu') }}</p>
         @else
             <div class="space-y-0">
                 @foreach($educations as $edu)
@@ -146,9 +146,13 @@
 
     {{-- Skills --}}
     <div>
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-8">Skills</p>
+        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-8">{{ __('messages.resume_skills') }}</p>
         <div class="flex flex-wrap gap-2.5">
-            @foreach(['Flutter', 'Clean Architecture', 'GetX', 'REST APIs', 'Firebase', 'iOS & Android', 'LLM Integration', 'AI-Powered Apps'] as $s)
+            @php
+                $skillsRaw = Setting::get('skills', 'Flutter, Clean Architecture, GetX, REST APIs, Firebase, iOS & Android, LLM Integration, AI-Powered Apps');
+                $skills = array_map('trim', explode(',', $skillsRaw));
+            @endphp
+            @foreach($skills as $s)
                 <span class="px-4 py-2 rounded-xl bg-white/[0.02] border border-white/[0.08] hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all duration-300 text-sm text-gray-300 font-medium cursor-default">
                     {{ $s }}
                 </span>

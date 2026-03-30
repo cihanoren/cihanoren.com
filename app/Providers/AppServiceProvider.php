@@ -3,22 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        $this->app->bind('Setting', \App\Models\Setting::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        // Setting facade alias — view'larda Setting::get() çalışsın
+        class_alias(\App\Models\Setting::class, 'Setting');
     }
 }

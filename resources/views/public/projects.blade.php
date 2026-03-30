@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Projects — CihanÖren')
+@section('title', __('messages.projects_label') . ' — CihanÖren')
 
 @section('content')
 
@@ -9,11 +9,11 @@
         <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
-        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">Projects</p>
+        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">{{ __('messages.projects_label') }}</p>
         <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4">
-            Things I've built.
+            {{ __('messages.projects_title') }}
         </h1>
-        <p class="text-gray-500 text-lg max-w-lg">A collection of mobile apps, tools, and experiments.</p>
+        <p class="text-gray-500 text-lg max-w-lg">{{ __('messages.projects_sub') }}</p>
     </div>
 </section>
 
@@ -25,7 +25,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
             </div>
-            <p class="text-gray-600 text-sm">Projects coming soon...</p>
+            <p class="text-gray-600 text-sm">{{ __('messages.projects_soon') }}</p>
         </div>
     @else
         <div class="grid md:grid-cols-2 gap-5">

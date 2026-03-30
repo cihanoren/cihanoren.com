@@ -9,7 +9,19 @@ use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use App\Http\Controllers\Admin\EducationController as AdminEducationController;
 use App\Http\Controllers\Admin\MessageController as AdminMessageController;
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+
+
 use Illuminate\Support\Facades\Route;
+
+// ─── Locale Switch ───────────────────────────────────────
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['tr', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 
 // ─── Public Routes ───────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -59,8 +71,16 @@ Route::middleware(['auth', 'verified', 'require2fa'])
         Route::post('/messages/{message}/reply', [AdminMessageController::class, 'reply'])->name('messages.reply');
         Route::delete('/messages/{message}', [AdminMessageController::class, 'destroy'])->name('messages.destroy');
 
-        // Settings placeholder
-        Route::get('/settings', fn() => view('dashboard'))->name('settings.index');
+
+        // Chat Sessions
+        Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
+        Route::get('/chat/{chatSession}', [AdminChatController::class, 'show'])->name('chat.show');
+        Route::delete('/chat/{chatSession}', [AdminChatController::class, 'destroy'])->name('chat.destroy');
+
+
+        // Settings
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
     });
 
 require __DIR__.'/auth.php';

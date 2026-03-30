@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Contact — CihanÖren')
+@section('title', __('messages.contact_label') . ' — CihanÖren')
 
 @section('content')
 
@@ -13,12 +13,12 @@
 
         {{-- Header --}}
         <div class="mb-16">
-            <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">Contact</p>
+            <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">{{ __('messages.contact_label') }}</p>
             <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4">
-                Let's work together.
+                {{ __('messages.contact_title') }}
             </h1>
             <p class="text-gray-400 text-lg max-w-md">
-                Available for freelance projects and full-time opportunities.
+                {{ __('messages.contact_sub') }}
             </p>
         </div>
 
@@ -40,33 +40,33 @@
                     @csrf
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Name</label>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ __('messages.contact_name') }}</label>
                         <input type="text" name="name" value="{{ old('name') }}"
                                class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all"
-                               placeholder="Your name">
+                               placeholder="{{ __('messages.contact_name_ph') }}">
                         @error('name') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Email</label>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ __('messages.contact_email') }}</label>
                         <input type="email" name="email" value="{{ old('email') }}"
                                class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all"
-                               placeholder="your@email.com">
+                               placeholder="{{ __('messages.contact_email_ph') }}">
                         @error('email') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Message</label>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ __('messages.contact_message') }}</label>
                         <textarea name="message" rows="5"
                                   class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all resize-none"
-                                  placeholder="Tell me about your project...">{{ old('message') }}</textarea>
+                                  placeholder="{{ __('messages.contact_msg_ph') }}">{{ old('message') }}</textarea>
                         @error('message') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
                     </div>
 
                     <button type="submit" id="submit-btn"
                             class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
                         <span id="btn-text" class="inline-flex items-center gap-2">
-                            Send Message
+                            {{ __('messages.contact_send') }}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                             </svg>
@@ -76,7 +76,7 @@
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                             </svg>
-                            Sending...
+                            {{ __('messages.contact_sending') }}
                         </span>
                     </button>
                 </form>
@@ -84,7 +84,7 @@
 
             {{-- Sağ: Linkler --}}
             <div class="space-y-4 md:pt-2">
-                <a href="mailto:cihan@cihanoren.com"
+                <a href="mailto:{{ Setting::get('contact_email', 'cihan@cihanoren.com') }}"
                    class="group flex items-center gap-4 p-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-200">
                     <div class="w-11 h-11 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,11 +93,11 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 font-medium mb-0.5">Email</p>
-                        <p class="text-white text-sm font-semibold group-hover:text-indigo-400 transition-colors">cihan@cihanoren.com</p>
+                        <p class="text-white text-sm font-semibold group-hover:text-indigo-400 transition-colors">{{ Setting::get('contact_email', 'cihan@cihanoren.com') }}</p>
                     </div>
                 </a>
 
-                <a href="https://github.com/cihanoren" target="_blank"
+                <a href="{{ Setting::get('github_url', 'https://github.com/cihanoren') }}" target="_blank"
                    class="group flex items-center gap-4 p-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-200">
                     <div class="w-11 h-11 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@
                     </div>
                 </a>
 
-                <a href="https://linkedin.com/in/cihanoren" target="_blank"
+                <a href="{{ Setting::get('linkedin_url', 'https://linkedin.com/in/cihanoren') }}" target="_blank"
                    class="group flex items-center gap-4 p-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-200">
                     <div class="w-11 h-11 rounded-xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
