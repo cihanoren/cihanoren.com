@@ -15,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Setting facade alias — view'larda Setting::get() çalışsın
-        class_alias(\App\Models\Setting::class, 'Setting');
+        if (!class_exists('Setting', false)) {
+            class_alias(\App\Models\Setting::class, 'Setting');
+        }
     }
 }
