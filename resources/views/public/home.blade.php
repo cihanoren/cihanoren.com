@@ -162,8 +162,11 @@
     </section>
 
     {{-- ── CTA + inline chat ─────────────────────────────────────────── --}}
-    <section class="relative border-t border-white/10" style="z-index:2;">
+    <section id="cta-section" class="relative border-t border-white/10" style="z-index:2;">
         <div class="max-w-7xl mx-auto px-6 py-24">
+
+            {{-- Traveling particle FX (button ⇄ panel), with trail --}}
+            <canvas id="cta-fx" aria-hidden="true" class="pointer-events-none fixed inset-0 w-full h-full" style="display:none; z-index:40;"></canvas>
 
             {{-- Default CTA --}}
             <div id="cta-default" class="reveal-up flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
@@ -171,7 +174,7 @@
                     <h2 class="display text-white font-semibold mb-4" style="font-size: clamp(2rem, 4vw, 3.2rem);">{{ __('messages.home_cta_title') }}</h2>
                     <p class="text-zinc-400 text-lg leading-relaxed">{{ __('messages.home_cta_sub') }}</p>
                 </div>
-                <button onclick="ctaOpenChat()"
+                <button onclick="ctaOpenChat()" id="cta-open-btn"
                         class="group shrink-0 inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors">
                     {{ __('messages.home_cta_btn') }}
                     <span class="w-8 h-8 rounded-full bg-black flex items-center justify-center">
@@ -300,15 +303,187 @@
 
     let ctaLoading = false;
 
-    window.ctaOpenChat = function() {
-        document.getElementById('cta-default').classList.add('hidden');
-        document.getElementById('cta-chat').classList.remove('hidden');
-        document.getElementById('cta-input').focus();
+    /* ── Button ⇄ traveling particle (with trail) ⇄ panel ───────────── */
+    const ctaDefault = document.getElementById('cta-default');
+    const ctaChat    = document.getElementById('cta-chat');
+    const ctaFx      = document.getElementById('cta-fx');
+    const ctaOpenBtn = document.getElementById('cta-open-btn');
+    const ctaSection = document.getElementById('cta-section');
+    const ctaReduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ctaOpen = false, ctaAnimating = false, ctaBtnOffset = null;
+
+    if (ctaChat && ctaDefault) {
+        ctaChat.classList.remove('hidden');
+        ctaChat.style.overflow = 'hidden';
+        ctaChat.style.height = '0px';
+        ctaChat.style.opacity = '0';
+        ctaChat.style.transformOrigin = 'top center';
+        ctaChat.setAttribute('aria-hidden', 'true');
+        ctaDefault.style.overflow = 'hidden';
+        ctaDefault.style.transformOrigin = 'top center';
+    }
+
+    function ctaWait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+    function ctaTopCenter(el){ const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + 26 }; }
+    function ctaCenter(el){ const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+
+    function ctaCollapse(el, dur){
+        el.style.transition = ctaReduce ? 'none' : ('height ' + dur + 'ms cubic-bezier(.22,.72,.2,1), opacity ' + Math.min(dur, 380) + 'ms ease');
+        el.style.height = el.scrollHeight + 'px';
+        void el.offsetHeight;
+        requestAnimationFrame(function(){ el.style.height = '0px'; el.style.opacity = '0'; });
+        return ctaWait(ctaReduce ? 0 : dur);
+    }
+    function ctaExpand(el, dur){
+        el.style.transition = ctaReduce ? 'none' : ('height ' + dur + 'ms cubic-bezier(.22,.72,.2,1), opacity ' + Math.min(dur, 380) + 'ms ease');
+        el.style.height = '0px'; el.style.opacity = '0';
+        void el.offsetHeight;
+        requestAnimationFrame(function(){ el.style.height = el.scrollHeight + 'px'; el.style.opacity = '1'; });
+        return ctaWait(ctaReduce ? 0 : dur).then(function(){ el.style.height = 'auto'; });
+    }
+
+    /* ---- particle FX (own canvas, comet trail) ---- */
+    let fxCtx = null, fxW = 0, fxH = 0;
+    const fxHead = { x: 0, y: 0 };
+    let fxTrail = [], fxAlpha = 1;
+
+    function fxResize(){
+        if (!ctaFx) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        fxW = window.innerWidth; fxH = window.innerHeight;
+        ctaFx.width = fxW * dpr; ctaFx.height = fxH * dpr;
+        fxCtx = ctaFx.getContext('2d');
+        fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function fxMix(a, b, t){ return [(a[0]+(b[0]-a[0])*t) | 0, (a[1]+(b[1]-a[1])*t) | 0, (a[2]+(b[2]-a[2])*t) | 0]; }
+    function fxDraw(){
+        if (!fxCtx) return;
+        fxCtx.clearRect(0, 0, fxW, fxH);
+        for (let i = 0; i < fxTrail.length; i++){
+            const t = fxTrail.length > 1 ? i / (fxTrail.length - 1) : 1;
+            const p = fxTrail[i];
+            const r = 0.4 + 1.7 * t;
+            const a = fxAlpha * (0.03 + 0.45 * t);
+            const c = fxMix([34,211,238], [192,132,252], t);
+            fxCtx.beginPath(); fxCtx.arc(p.x, p.y, r, 0, 6.2832);
+            fxCtx.fillStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+            fxCtx.fill();
+        }
+        const g = fxCtx.createRadialGradient(fxHead.x, fxHead.y, 0, fxHead.x, fxHead.y, 7);
+        g.addColorStop(0, 'rgba(255,255,255,' + (0.95 * fxAlpha) + ')');
+        g.addColorStop(0.4, 'rgba(165,243,252,' + (0.5 * fxAlpha) + ')');
+        g.addColorStop(1, 'rgba(129,140,248,0)');
+        fxCtx.fillStyle = g; fxCtx.beginPath(); fxCtx.arc(fxHead.x, fxHead.y, 7, 0, 6.2832); fxCtx.fill();
+        fxCtx.beginPath(); fxCtx.arc(fxHead.x, fxHead.y, 1.9, 0, 6.2832);
+        fxCtx.fillStyle = 'rgba(255,255,255,' + fxAlpha + ')'; fxCtx.fill();
+    }
+    function fxShow(pt){ fxResize(); ctaFx.style.display = 'block'; fxAlpha = 1; fxTrail = []; fxHead.x = pt.x; fxHead.y = pt.y; fxDraw(); }
+    function fxHide(){ if (fxCtx) fxCtx.clearRect(0, 0, fxW, fxH); ctaFx.style.display = 'none'; fxTrail = []; fxAlpha = 1; }
+    function easeOut(k){ return 1 - Math.pow(1 - k, 3); }
+    function easeInOut(k){ return k < 0.5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3) / 2; }
+
+    function fxTween(from, to, dur, ease, arc){
+        arc = arc || 0;
+        const dx = to.x - from.x, dy = to.y - from.y, len = Math.hypot(dx, dy) || 1;
+        let px = -dy / len, py = dx / len;
+        if (py > 0){ px = -px; py = -py; }            // prefer an upward bow
+        return new Promise(function(res){
+            if (ctaReduce){ fxHead.x = to.x; fxHead.y = to.y; fxDraw(); return res(); }
+            const t0 = performance.now();
+            (function step(now){
+                const k = Math.min(1, (now - t0) / dur), e = ease(k);
+                const bow = Math.sin(Math.PI * k) * arc;
+                fxHead.x = from.x + dx * e + px * bow;
+                fxHead.y = from.y + dy * e + py * bow;
+                fxTrail.push({ x: fxHead.x, y: fxHead.y });
+                if (fxTrail.length > 26) fxTrail.shift();
+                fxDraw();
+                if (k < 1) requestAnimationFrame(step); else res();
+            })(performance.now());
+        });
+    }
+    function fxFade(dur){
+        return new Promise(function(res){
+            if (ctaReduce){ fxHide(); return res(); }
+            const t0 = performance.now(), a0 = fxAlpha;
+            (function step(now){
+                const k = Math.min(1, (now - t0) / dur);
+                fxAlpha = a0 * (1 - k); fxDraw();
+                if (k < 1) requestAnimationFrame(step); else { fxHide(); res(); }
+            })(performance.now());
+        });
+    }
+    function ctaAway(from, ref, D){
+        let dx = ref.x - from.x, dy = ref.y - from.y; const len = Math.hypot(dx, dy) || 1;
+        dx /= len; dy /= len;
+        let x = from.x - dx * D, y = from.y - dy * D;
+        x = Math.max(30, Math.min(fxW - 30, x));
+        y = Math.max(96, Math.min(fxH - 30, y));
+        return { x: x, y: y };
+    }
+    function ctaBtnPoint(){
+        if (!ctaBtnOffset || !ctaSection) return ctaTopCenter(ctaDefault);
+        const sr = ctaSection.getBoundingClientRect();
+        return { x: sr.left + ctaBtnOffset.x, y: sr.top + ctaBtnOffset.y };
+    }
+    window.addEventListener('resize', function(){ if (ctaFx && ctaFx.style.display !== 'none') fxResize(); });
+
+    window.ctaOpenChat = async function(){
+        if (ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
+        ctaOpen = true; ctaAnimating = true;
+
+        if (!ctaFx || ctaReduce){
+            ctaDefault.style.pointerEvents = 'none';
+            await ctaCollapse(ctaDefault, 0);
+            await ctaExpand(ctaChat, 0);
+            ctaAnimating = false;
+            const i = document.getElementById('cta-input'); if (i) i.focus();
+            return;
+        }
+
+        const from = ctaCenter(ctaOpenBtn);
+        if (ctaSection){ const sr = ctaSection.getBoundingClientRect(); ctaBtnOffset = { x: from.x - sr.left, y: from.y - sr.top }; }
+        const provTo = ctaTopCenter(ctaChat);
+        fxShow(from);
+        ctaDefault.style.pointerEvents = 'none';
+        const away = ctaAway(from, provTo, 152);
+        // recoil opposite the panel while the button row folds away
+        await Promise.all([ ctaCollapse(ctaDefault, 300), fxTween(from, away, 300, easeOut, 32) ]);
+        // slide back to the panel spot, trailing
+        const to = ctaTopCenter(ctaChat);
+        await fxTween(away, to, 680, easeInOut, 66);
+        // panel blooms from the landing point; particle fades
+        const bloom = ctaExpand(ctaChat, 460);
+        await fxFade(240);
+        await bloom;
+        ctaAnimating = false;
+        const inp = document.getElementById('cta-input'); if (inp) inp.focus();
     };
 
-    window.ctaCloseChat = function() {
-        document.getElementById('cta-chat').classList.add('hidden');
-        document.getElementById('cta-default').classList.remove('hidden');
+    window.ctaCloseChat = async function(){
+        if (!ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
+        ctaOpen = false; ctaAnimating = true;
+
+        if (!ctaFx || ctaReduce){
+            await ctaCollapse(ctaChat, 0);
+            await ctaExpand(ctaDefault, 0);
+            ctaDefault.style.pointerEvents = '';
+            ctaAnimating = false;
+            return;
+        }
+
+        const from = ctaTopCenter(ctaChat);
+        const btn = ctaBtnPoint();
+        fxShow(from);
+        const away = ctaAway(from, btn, 152);
+        await Promise.all([ ctaCollapse(ctaChat, 300), fxTween(from, away, 300, easeOut, 32) ]);
+        const to = ctaBtnPoint();
+        await fxTween(away, to, 680, easeInOut, 66);
+        ctaDefault.style.pointerEvents = '';
+        const grow = ctaExpand(ctaDefault, 460);
+        await fxFade(240);
+        await grow;
+        ctaAnimating = false;
     };
 
     function ctaAddMessage(content, role) {
