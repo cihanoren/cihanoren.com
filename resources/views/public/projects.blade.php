@@ -4,76 +4,88 @@
 
 @section('content')
 
-<section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
-    </div>
-    <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
-        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">{{ __('messages.projects_label') }}</p>
-        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4">
-            {{ __('messages.projects_title') }}
-        </h1>
-        <p class="text-gray-500 text-lg max-w-lg">{{ __('messages.projects_sub') }}</p>
-    </div>
-</section>
+{{-- favicon fallback (ensures the icon link exists in <head> for this page) --}}
+<script>(function(){var l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');document.head.appendChild(l);}l.rel='icon';l.type='image/png';l.href='/favicon.png';})();</script>
 
-<section class="max-w-7xl mx-auto px-6 pb-24">
-    @if($projects->isEmpty())
-        <div class="rounded-2xl border border-dashed border-white/[0.07] p-16 flex flex-col items-center justify-center gap-3 text-center">
-            <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.07] flex items-center justify-center">
-                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
+<div class="lux -mt-20">
+
+    {{-- ambient --}}
+    <div class="aurora" style="top:-8%; left:50%; transform:translateX(-50%); width:60vw; height:40vw; max-width:900px; max-height:560px;
+         background: radial-gradient(circle at 50% 50%, rgba(129,140,248,.16), transparent 62%); animation: drift1 22s ease-in-out infinite;"></div>
+    <div class="aurora" style="top:2%; right:6%; width:30vw; height:30vw; max-width:440px; max-height:440px;
+         background: radial-gradient(circle at 50% 50%, rgba(34,211,238,.12), transparent 60%); animation: drift2 26s ease-in-out infinite;"></div>
+    <div class="grain"></div>
+
+    {{-- ── Hero ──────────────────────────────────────────────────────── --}}
+    <section class="relative" style="z-index:2;">
+        <div class="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-14" style="z-index:2;">
+            <div class="boot b1 flex items-center gap-4 mb-8">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.projects_label') }}</span>
             </div>
-            <p class="text-gray-600 text-sm">{{ __('messages.projects_soon') }}</p>
+            <h1 class="boot b2 display font-semibold text-white leading-[0.98] mb-5 max-w-3xl"
+                style="font-size: clamp(2.8rem, 7vw, 5.4rem);">
+                {{ __('messages.projects_title') }}
+            </h1>
+            <p class="boot b3 text-zinc-400 text-lg max-w-lg leading-relaxed">{{ __('messages.projects_sub') }}</p>
         </div>
-    @else
-        <div class="grid md:grid-cols-2 gap-5">
-            @foreach($projects as $project)
-            <a href="{{ route('projects.show', $project->slug) }}"
-               class="group relative rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-300 overflow-hidden">
+    </section>
 
-                {{-- Cover image --}}
-                @if($project->cover_image)
-                    <div class="w-full h-48 overflow-hidden">
-                        <img src="{{ Storage::url($project->cover_image) }}"
-                             alt="{{ $project->title }}"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                @endif
+    {{-- ── Grid ──────────────────────────────────────────────────────── --}}
+    <section class="relative" style="z-index:2;">
+        <div class="max-w-7xl mx-auto px-6 pb-28">
 
-                {{-- Card glow on hover --}}
-                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div class="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-indigo-600/10 blur-[60px]"></div>
-                </div>
-
-                <div class="relative p-7">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-11 h-11 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-700 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            @if($projects->isEmpty())
+                <div class="reveal-up rounded-3xl border border-dashed border-white/[0.1] p-16 flex flex-col items-center justify-center gap-4 text-center">
+                    <div class="w-11 h-11 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center">
+                        <svg class="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
                     </div>
-
-                    <h3 class="text-white font-bold text-lg mb-2">{{ $project->title }}</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed mb-5">{{ $project->description }}</p>
-
-                    @if($project->tags)
-                        <div class="flex gap-2 flex-wrap">
-                            @foreach($project->tags as $tag)
-                                <span class="text-xs px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-medium">{{ $tag }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+                    <p class="mono text-sm text-zinc-500">{{ __('messages.projects_soon') }}</p>
                 </div>
-            </a>
-            @endforeach
+            @else
+                <div class="grid md:grid-cols-2 gap-6">
+                    @foreach($projects as $project)
+                    <a href="{{ route('projects.show', $project->slug) }}"
+                       class="card reveal-up group relative rounded-3xl border border-white/[0.09] bg-white/[0.015]
+                              hover:bg-white/[0.03] transition-all duration-500 overflow-hidden hover:-translate-y-1 {{ $loop->even ? 'rv-delay' : '' }}">
+
+                        @if($project->cover_image)
+                            <div class="relative w-full h-52 overflow-hidden">
+                                <img src="{{ Storage::url($project->cover_image) }}"
+                                     alt="{{ $project->title }}"
+                                     class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-[900ms] ease-out">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+                            </div>
+                        @endif
+
+                        <div class="relative p-8">
+                            <div class="flex items-center gap-3 mb-5">
+                                <span class="mono text-[13px] text-zinc-600">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                                <span class="h-px flex-1 bg-white/[0.07] group-hover:bg-white/20 transition-colors"></span>
+                                <svg class="w-4 h-4 text-zinc-600 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-white transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/>
+                                </svg>
+                            </div>
+                            <h3 class="display text-white font-medium text-2xl mb-3">{{ $project->title }}</h3>
+                            <p class="text-[15px] text-zinc-400 leading-relaxed mb-6 line-clamp-3">{{ $project->description }}</p>
+                            @if($project->tags)
+                                <div class="flex gap-x-2 gap-y-1 flex-wrap mono text-[12px] text-zinc-500">
+                                    @foreach($project->tags as $tag)
+                                        <span class="text-zinc-400">{{ $tag }}</span>
+                                        @if(!$loop->last)<span class="text-zinc-700">·</span>@endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+            @endif
         </div>
-    @endif
-</section>
+    </section>
+
+</div>
 
 @endsection

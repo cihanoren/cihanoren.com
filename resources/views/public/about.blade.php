@@ -4,188 +4,200 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0">
-        <div class="absolute -top-24 right-0 w-[500px] h-[500px] rounded-full bg-indigo-600/8 blur-[100px]"></div>
-    </div>
-    <div class="relative max-w-7xl mx-auto px-6 pt-24 pb-20">
-        <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-4">{{ __('messages.about_label') }}</p>
-        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6 max-w-2xl">
-            {{ __('messages.about_title') }}
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400"> {{ __('messages.about_title2') }}</span>
-        </h1>
-        <p class="text-gray-400 text-lg max-w-xl leading-relaxed">
-            {{ __('messages.about_sub') }}
-        </p>
-    </div>
-</section>
+<div class="lux -mt-20">
 
-{{-- Skills --}}
-<section class="border-t border-white/5 bg-white/[0.015]">
-    <div class="max-w-7xl mx-auto px-6 py-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-10">{{ __('messages.about_skills') }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-                <div class="w-9 h-9 rounded-lg bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center mb-5">
-                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-sm mb-4">Mobile</p>
-                <div class="flex flex-wrap gap-2">
-                    @foreach(['Flutter', 'Dart', 'iOS & Android', 'GetX', 'Clean Architecture'] as $s)
-                        <span class="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                    @endforeach
-                </div>
+    {{-- ambient --}}
+    <div class="aurora" style="top:-6%; right:-8%; width:46vw; height:46vw; max-width:720px; max-height:720px;
+         background: radial-gradient(circle at 50% 50%, rgba(129,140,248,.18), transparent 62%); animation: drift1 20s ease-in-out infinite;"></div>
+    <div class="aurora" style="top:8%; right:10%; width:30vw; height:30vw; max-width:460px; max-height:460px;
+         background: radial-gradient(circle at 50% 50%, rgba(34,211,238,.13), transparent 60%); animation: drift2 24s ease-in-out infinite;"></div>
+    <div class="grain"></div>
+
+    {{-- ── Hero ──────────────────────────────────────────────────────── --}}
+    <section class="relative" style="z-index:2;">
+        <div class="relative max-w-7xl mx-auto px-6 w-full pt-28 pb-16" style="z-index:2;">
+            <div class="boot b1 flex items-center gap-4 mb-8">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.about_label') }}</span>
             </div>
-            <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-                <div class="w-9 h-9 rounded-lg bg-violet-500/15 border border-violet-500/20 flex items-center justify-center mb-5">
-                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-sm mb-4">Backend & APIs</p>
-                <div class="flex flex-wrap gap-2">
-                    @foreach(['Laravel', 'REST APIs', 'Firebase'] as $s)
-                        <span class="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                    @endforeach
-                </div>
+            <h1 class="boot b2 display font-semibold text-white leading-[0.98] mb-7 max-w-3xl"
+                style="font-size: clamp(2.6rem, 6.5vw, 5rem);">
+                {{ __('messages.about_title') }}
+                <span class="grad">{{ __('messages.about_title2') }}</span>
+            </h1>
+            <p class="boot b3 text-zinc-300 text-lg max-w-xl leading-relaxed">{{ __('messages.about_sub') }}</p>
+        </div>
+    </section>
+
+    {{-- ── Skills ────────────────────────────────────────────────────── --}}
+    <section class="relative border-t border-white/10" style="z-index:2;">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="reveal-up flex items-center gap-4 mb-12">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.about_skills') }}</span>
             </div>
-            <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-                <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mb-5">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                {{-- Mobile --}}
+                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(34,211,238,.12); border:1px solid rgba(34,211,238,.25);">
+                        <svg class="w-4 h-4" style="color:#22d3ee" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <p class="display text-white font-medium text-lg mb-5">Mobile</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(['Flutter', 'Dart', 'iOS & Android', 'GetX', 'Clean Architecture'] as $s)
+                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
+                                <span class="dot"></span>{{ $s }}
+                            </span>
+                        @endforeach
+                    </div>
                 </div>
-                <p class="text-white font-bold text-sm mb-4">AI</p>
-                <div class="flex flex-wrap gap-2">
-                    @foreach(['LLM Integration', 'AI-Powered Apps'] as $s)
-                        <span class="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-gray-300 font-medium">{{ $s }}</span>
-                    @endforeach
+
+                {{-- Backend & APIs --}}
+                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(192,132,252,.12); border:1px solid rgba(192,132,252,.25);">
+                        <svg class="w-4 h-4" style="color:#c084fc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                    <p class="display text-white font-medium text-lg mb-5">Backend &amp; APIs</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(['Laravel', 'REST APIs', 'Firebase'] as $s)
+                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
+                                <span class="dot"></span>{{ $s }}
+                            </span>
+                        @endforeach
+                    </div>
                 </div>
+
+                {{-- AI --}}
+                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(244,114,182,.12); border:1px solid rgba(244,114,182,.25);">
+                        <svg class="w-4 h-4" style="color:#f472b6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <p class="display text-white font-medium text-lg mb-5">AI</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(['LLM Integration', 'AI-Powered Apps'] as $s)
+                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
+                                <span class="dot"></span>{{ $s }}
+                            </span>
+                        @endforeach
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-{{-- Experience --}}
-<section class="max-w-7xl mx-auto px-6 py-20">
-    <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.about_experience') }}</p>
-
-    @if($experiences->isEmpty())
-        <p class="text-gray-600 text-sm">{{ __('messages.about_no_exp') }}</p>
-    @else
-        <div class="space-y-0">
-            @foreach($experiences as $index => $exp)
-            <div class="group relative grid grid-cols-[auto_1fr] md:grid-cols-[200px_auto_1fr] gap-5 md:gap-8 pb-12">
-                <div class="hidden md:block text-right pt-1">
-                    <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3.5 py-1.5 rounded-lg inline-block transition-colors group-hover:bg-white/[0.04]">
-                        {{ $exp->date_range }}
-                    </span>
-                </div>
-                <div class="relative flex flex-col items-center w-6">
-                    @if(!$loop->last)
-                        <div class="absolute top-8 -bottom-12 w-px bg-white/10 group-hover:bg-indigo-500/40 transition-colors duration-500"></div>
-                    @endif
-                    <div class="w-6 h-6 rounded-full bg-gray-950 border-2 {{ $exp->current ? 'border-indigo-500' : 'border-white/10 group-hover:border-white/30' }} flex items-center justify-center relative z-10 mt-0.5 transition-colors duration-300">
-                        <div class="w-2 h-2 rounded-full {{ $exp->current ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]' : 'bg-white/20 group-hover:bg-white/50' }} transition-all duration-300"></div>
-                    </div>
-                </div>
-                <div class="pt-0.5">
-                    <div class="md:hidden mb-3">
-                        <span class="text-xs font-semibold tracking-widest {{ $exp->current ? 'text-indigo-400' : 'text-gray-500' }} uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
-                            {{ $exp->date_range }}
-                        </span>
-                    </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
-                        <h3 class="text-white font-bold text-xl">{{ $exp->position }}</h3>
-                        @if($exp->current)
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] font-bold tracking-wider uppercase w-fit">
-                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-                                {{ __('messages.current') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="flex items-center flex-wrap gap-2 text-sm mb-4">
-                        <span class="flex items-center gap-1.5 font-medium text-gray-300">
-                            <svg class="w-4 h-4 text-indigo-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            {{ $exp->company }}
-                        </span>
-                        @if($exp->location)
-                            <span class="text-gray-600 px-1">•</span>
-                            <span class="flex items-center gap-1.5 text-gray-400">
-                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                {{ $exp->location }}
-                            </span>
-                        @endif
-                    </div>
-                    @if($exp->description)
-                        <div class="text-gray-400 text-sm leading-relaxed bg-white/[0.015] border border-white/[0.04] rounded-xl p-5 group-hover:border-white/[0.08] group-hover:bg-white/[0.025] transition-all duration-300 shadow-sm">
-                            {{ $exp->description }}
-                        </div>
-                    @endif
-                </div>
+    {{-- ── Experience ────────────────────────────────────────────────── --}}
+    <section class="relative border-t border-white/10" style="z-index:2;">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="reveal-up flex items-center gap-4 mb-14">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.about_experience') }}</span>
             </div>
-            @endforeach
-        </div>
-    @endif
-</section>
 
-{{-- Education --}}
-<section class="border-t border-white/5 bg-white/[0.015]">
-    <div class="max-w-7xl mx-auto px-6 py-16">
-        <p class="text-xs font-semibold tracking-widest uppercase text-indigo-400 mb-12">{{ __('messages.about_education') }}</p>
-
-        @if($educations->isEmpty())
-            <p class="text-gray-600 text-sm">{{ __('messages.about_no_edu') }}</p>
-        @else
-            <div class="space-y-0">
-                @foreach($educations as $edu)
-                <div class="group relative grid grid-cols-[auto_1fr] md:grid-cols-[200px_auto_1fr] gap-5 md:gap-8 pb-10">
-                    <div class="hidden md:block text-right pt-1">
-                        <span class="text-xs font-semibold tracking-widest text-gray-500 uppercase bg-white/[0.02] border border-white/[0.05] px-3.5 py-1.5 rounded-lg inline-block transition-colors group-hover:bg-white/[0.04]">
-                            {{ $edu->date_range }}
-                        </span>
-                    </div>
-                    <div class="relative flex flex-col items-center w-6">
-                        @if(!$loop->last)
-                            <div class="absolute top-8 -bottom-10 w-px bg-white/10 group-hover:bg-indigo-500/30 transition-colors duration-500"></div>
-                        @endif
-                        <div class="w-6 h-6 rounded-full bg-gray-950 border-2 border-white/10 group-hover:border-white/30 flex items-center justify-center relative z-10 mt-0.5 transition-colors duration-300">
-                            <div class="w-2 h-2 rounded-full bg-white/20 group-hover:bg-white/50 transition-all duration-300"></div>
+            @if($experiences->isEmpty())
+                <p class="mono text-sm text-zinc-500">{{ __('messages.about_no_exp') }}</p>
+            @else
+                <div class="tl">
+                    @foreach($experiences as $exp)
+                    <div class="reveal-up grid grid-cols-[24px_1fr] md:grid-cols-[150px_24px_1fr] gap-x-5 md:gap-x-8 pb-12">
+                        {{-- date (desktop) --}}
+                        <div class="hidden md:flex justify-end pt-1">
+                            <span class="mono text-[11px] tracking-wide uppercase {{ $exp->current ? 'text-cyan-300' : 'text-zinc-500' }}">{{ $exp->date_range }}</span>
                         </div>
-                    </div>
-                    <div class="pt-0.5">
-                        <div class="md:hidden mb-3">
-                            <span class="text-xs font-semibold tracking-widest text-gray-500 uppercase bg-white/[0.02] border border-white/[0.05] px-3 py-1 rounded-lg inline-block">
-                                {{ $edu->date_range }}
-                            </span>
+                        {{-- rail --}}
+                        <div class="relative flex justify-center pt-1.5">
+                            @if(!$loop->last)<span class="tl-line"></span>@endif
+                            <span class="tl-dot {{ $exp->current ? 'is-current' : '' }}"></span>
                         </div>
-                        <h3 class="text-white font-bold text-xl mb-2">{{ $edu->school }}</h3>
-                        <div class="flex items-center flex-wrap gap-2 text-sm mb-2">
-                            <span class="flex items-center gap-1.5 font-medium text-indigo-400">
-                                <svg class="w-4 h-4 text-indigo-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0H9m3 0h3"/>
-                                </svg>
-                                {{ $edu->department }}
-                            </span>
-                            @if($edu->degree)
-                                <span class="text-gray-600">·</span>
-                                <span class="text-gray-500 text-xs">{{ $edu->degree }}</span>
+                        {{-- content --}}
+                        <div>
+                            <div class="md:hidden mb-3">
+                                <span class="mono text-[11px] tracking-wide uppercase {{ $exp->current ? 'text-cyan-300' : 'text-zinc-500' }}">{{ $exp->date_range }}</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
+                                <h3 class="display text-white font-medium text-xl">{{ $exp->position }}</h3>
+                                @if($exp->current)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full mono text-[11px] tracking-wide uppercase w-fit"
+                                          style="background:rgba(129,140,248,.12); border:1px solid rgba(129,140,248,.3); color:#c7d2fe;">
+                                        <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:linear-gradient(135deg,#22d3ee,#c084fc);"></span>
+                                        {{ __('messages.current') }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="mono text-[13px] flex items-center flex-wrap gap-2 mb-4">
+                                <span class="text-zinc-300">{{ $exp->company }}</span>
+                                @if($exp->location)
+                                    <span class="text-zinc-700">·</span>
+                                    <span class="text-zinc-500">{{ $exp->location }}</span>
+                                @endif
+                            </div>
+                            @if($exp->description)
+                                <div class="card rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 max-w-2xl transition-colors duration-500 hover:bg-white/[0.025]">
+                                    <p class="text-[15px] text-zinc-400 leading-relaxed">{{ $exp->description }}</p>
+                                </div>
                             @endif
                         </div>
-                        @if($edu->description)
-                            <div class="text-gray-400 text-sm leading-relaxed bg-white/[0.015] border border-white/[0.04] rounded-xl p-5 group-hover:border-white/[0.08] group-hover:bg-white/[0.025] transition-all duration-300 shadow-sm">
-                                {{ $edu->description }}
-                            </div>
-                        @endif
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
+            @endif
+        </div>
+    </section>
+
+    {{-- ── Education ─────────────────────────────────────────────────── --}}
+    <section class="relative border-t border-white/10" style="z-index:2;">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="reveal-up flex items-center gap-4 mb-14">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.about_education') }}</span>
             </div>
-        @endif
-    </div>
-</section>
+
+            @if($educations->isEmpty())
+                <p class="mono text-sm text-zinc-500">{{ __('messages.about_no_edu') }}</p>
+            @else
+                <div class="tl">
+                    @foreach($educations as $edu)
+                    <div class="reveal-up grid grid-cols-[24px_1fr] md:grid-cols-[150px_24px_1fr] gap-x-5 md:gap-x-8 pb-12">
+                        <div class="hidden md:flex justify-end pt-1">
+                            <span class="mono text-[11px] tracking-wide uppercase text-zinc-500">{{ $edu->date_range }}</span>
+                        </div>
+                        <div class="relative flex justify-center pt-1.5">
+                            @if(!$loop->last)<span class="tl-line"></span>@endif
+                            <span class="tl-dot"></span>
+                        </div>
+                        <div>
+                            <div class="md:hidden mb-3">
+                                <span class="mono text-[11px] tracking-wide uppercase text-zinc-500">{{ $edu->date_range }}</span>
+                            </div>
+                            <h3 class="display text-white font-medium text-xl mb-2">{{ $edu->school }}</h3>
+                            <div class="mono text-[13px] flex items-center flex-wrap gap-2">
+                                <span class="text-cyan-300">{{ $edu->department }}</span>
+                                @if($edu->degree)
+                                    <span class="text-zinc-700">·</span>
+                                    <span class="text-zinc-500">{{ $edu->degree }}</span>
+                                @endif
+                            </div>
+                            @if($edu->description)
+                                <div class="card rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 max-w-2xl mt-4 transition-colors duration-500 hover:bg-white/[0.025]">
+                                    <p class="text-[15px] text-zinc-400 leading-relaxed">{{ $edu->description }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </section>
+
+</div>
 
 @endsection

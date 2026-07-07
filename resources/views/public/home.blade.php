@@ -4,248 +4,293 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section class="relative min-h-[92vh] flex items-center overflow-hidden">
 
-    {{-- Background glow --}}
-    <div class="pointer-events-none absolute inset-0">
-        <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px]"></div>
-        <div class="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full bg-violet-600/8 blur-[100px]"></div>
-        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px); background-size: 48px 48px;"></div>
-    </div>
+<div class="lux -mt-20">
 
-    <div class="relative max-w-7xl mx-auto px-6 py-28 w-full">
+    {{-- ambient aurora --}}
+    <div class="aurora" style="top:-10%; right:-6%; width:52vw; height:52vw; max-width:820px; max-height:820px;
+         background: radial-gradient(circle at 50% 50%, rgba(129,140,248,.22), transparent 62%); animation: drift1 18s ease-in-out infinite;"></div>
+    <div class="aurora" style="top:20%; right:6%; width:34vw; height:34vw; max-width:520px; max-height:520px;
+         background: radial-gradient(circle at 50% 50%, rgba(34,211,238,.16), transparent 60%); animation: drift2 22s ease-in-out infinite;"></div>
 
-        {{-- Badge --}}
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 mb-8">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-emerald-400 text-xs font-medium tracking-wide">{{ Setting::get('hero_badge', __('messages.home_badge')) }}</span>
+    {{-- film grain --}}
+    <div class="grain"></div>
+
+    {{-- ── Hero ──────────────────────────────────────────────────────── --}}
+    <section class="relative min-h-[92vh] flex flex-col">
+
+        <div class="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-6 w-full pt-28 pb-10" style="z-index:2;">
+
+            {{-- eyebrow --}}
+            <div class="boot b1 flex items-center gap-4 mb-9">
+                <span class="h-px w-12 bg-white/25"></span>
+                <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">
+                    {{ Setting::get('hero_badge', __('messages.home_badge')) }}
+                </span>
+            </div>
+
+            @php
+                $heroTitle = Setting::get('hero_title', 'Flutter Developer & Mobile Architect');
+                $heroParts = explode('&', $heroTitle, 2);
+            @endphp
+            <h1 class="display font-semibold text-white leading-[0.94] mb-9"
+                style="font-size: clamp(3.1rem, 9vw, 7.4rem);">
+                <span class="boot b2 block">{{ trim($heroParts[0]) }}</span>
+                <span class="boot b3 block">
+                    <span class="text-white/25 font-medium">&amp;</span>
+                    <span class="grad">{{ trim($heroParts[1] ?? '') }}</span>
+                </span>
+            </h1>
+
+            <p class="boot b4 text-zinc-300 leading-relaxed mb-8 max-w-xl"
+               style="font-size: clamp(1.05rem, 1.4vw, 1.3rem);">
+                {{ Setting::get('hero_subtitle', __('messages.home_hero_sub')) }}
+            </p>
+
+            {{-- tech stack chips --}}
+            @php
+                $skillsRaw = Setting::get('skills', 'Flutter, Clean Architecture, GetX, REST APIs, Firebase, iOS & Android, LLM Integration, AI-Powered Apps');
+                $skills = array_map('trim', explode(',', $skillsRaw));
+            @endphp
+            <div class="boot b5 mb-11 flex flex-wrap gap-2 max-w-2xl">
+                @foreach($skills as $s)
+                    <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[13px] text-zinc-400 hover:text-white hover:bg-white/[0.04] hover:-translate-y-0.5 transition-all duration-300 cursor-default">
+                        <span class="dot"></span>{{ $s }}
+                    </span>
+                @endforeach
+            </div>
+
+            {{-- actions --}}
+            <div class="boot b6 flex flex-wrap gap-3">
+                <a href="{{ route('projects.index') }}"
+                   class="group inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors">
+                    {{ __('messages.home_view_projects') }}
+                    <span class="w-8 h-8 rounded-full bg-black flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </span>
+                </a>
+                <a href="{{ route('contact') }}"
+                   class="inline-flex items-center px-6 py-3 rounded-full border border-white/15 text-sm text-zinc-200 hover:border-white/40 hover:bg-white/5 transition-colors">
+                    {{ __('messages.home_get_in_touch') }}
+                </a>
+            </div>
         </div>
 
-       @php
-        $heroTitle = Setting::get('hero_title', 'Flutter Developer & Mobile Architect');
-        $heroParts = explode('&', $heroTitle, 2);
-        @endphp
-        <h1 class="text-5xl md:text-[72px] font-black text-white leading-[1.05] tracking-tight mb-6">
-            {{ trim($heroParts[0]) }}<br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">&amp; {{ trim($heroParts[1] ?? '') }}</span>
-        </h1>
+        {{-- hero stats with animated waves --}}
+        <div class="relative max-w-7xl mx-auto px-6 w-full pb-14" style="z-index:2;">
+            @php
+                $stats = [
+                    ['3+', __('messages.home_years_exp')],
+                    ['10+', __('messages.home_apps_shipped')],
+                    ['iOS & Android', __('messages.home_both_platforms')],
+                ];
+            @endphp
+            <div class="grid grid-cols-3 gap-6 md:gap-12 pt-8 border-t border-white/10">
+                @foreach($stats as $stat)
+                    <div class="boot b6">
+                        <p class="display text-white font-semibold {{ strlen($stat[0]) > 4 ? 'text-xl md:text-3xl' : 'text-3xl md:text-5xl' }}">{{ $stat[0] }}</p>
+                        <svg class="wave block text-zinc-600 my-3" viewBox="0 0 240 24" width="100%" height="20" preserveAspectRatio="xMidYMid meet" data-w="240"></svg>
+                        <p class="mono text-[11px] md:text-[12px] tracking-wide uppercase text-zinc-500">{{ $stat[1] }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
-        <p class="text-gray-400 text-lg md:text-xl max-w-lg leading-relaxed mb-10">
-            {{ Setting::get('hero_subtitle', __('messages.home_hero_sub')) }}
-        </p>
-
-        <div class="flex flex-wrap gap-3">
+    {{-- ── Featured projects ─────────────────────────────────────────── --}}
+    <section class="relative max-w-7xl mx-auto px-6 py-28" style="z-index:2;">
+        <div class="reveal-up flex items-end justify-between mb-14">
+            <div>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="h-px w-12 bg-white/25"></span>
+                    <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.home_work_label') }}</span>
+                </div>
+                <h2 class="display text-white font-semibold" style="font-size: clamp(2.2rem, 4.5vw, 3.6rem);">{{ __('messages.home_featured') }}</h2>
+            </div>
             <a href="{{ route('projects.index') }}"
-               class="group inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-all duration-200 shadow-lg shadow-indigo-600/25">
-                {{ __('messages.home_view_projects') }}
+               class="group hidden sm:inline-flex items-center gap-2 mono text-sm text-zinc-500 hover:text-white transition-colors pb-2">
+                {{ __('messages.home_view_all') }}
                 <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
-            <a href="{{ route('contact') }}"
-               class="inline-flex items-center gap-2 px-6 py-3 border border-white/10 hover:border-white/25 hover:bg-white/5 text-gray-300 hover:text-white rounded-xl font-semibold text-sm transition-all duration-200">
-                {{ __('messages.home_get_in_touch') }}
-            </a>
         </div>
 
-        {{-- Skills: Marquee --}}
-        <div class="mt-14 pt-12 border-t border-white/[0.06]">
-            <p class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-6">{{ __('messages.home_skills_label') }}</p>
-            <div class="overflow-hidden -mx-6">
-                <style>
-                    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-                    .marquee-track { animation: marquee 22s linear infinite; display: flex; width: max-content; }
-                    .marquee-track:hover { animation-play-state: paused; }
-                </style>
-                <div class="marquee-track px-6">
-                    @php
-                        $skillsRaw = Setting::get('skills', 'Flutter, Clean Architecture, GetX, REST APIs, Firebase, iOS & Android, LLM Integration, AI-Powered Apps');
-                        $skills = array_map('trim', explode(',', $skillsRaw));
-                    @endphp
-                    @foreach(array_merge($skills, $skills) as $s)
-                        <span class="inline-flex shrink-0 mx-2 px-6 py-3 rounded-full border border-white/[0.1] bg-white/[0.04] text-sm text-gray-300 font-semibold hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-white transition-all duration-200 cursor-default">
-                            {{ $s }}
-                        </span>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            @forelse($featuredProjects as $project)
+            <a href="{{ route('projects.show', $project->slug) }}"
+               class="card reveal-up group relative rounded-3xl border border-white/[0.09] bg-white/[0.015]
+                      hover:bg-white/[0.03] transition-all duration-500 overflow-hidden hover:-translate-y-1 {{ $loop->even ? 'rv-delay' : '' }}">
 
-        {{-- Stats --}}
-        <div class="flex flex-wrap gap-10 mt-10 pt-10 border-t border-white/[0.06]">
-            <div>
-                <p class="text-3xl font-black text-white">3+</p>
-                <p class="text-sm text-gray-500 mt-0.5">{{ __('messages.home_years_exp') }}</p>
-            </div>
-            <div>
-                <p class="text-3xl font-black text-white">10+</p>
-                <p class="text-sm text-gray-500 mt-0.5">{{ __('messages.home_apps_shipped') }}</p>
-            </div>
-            <div>
-                <p class="text-3xl font-black text-white">iOS & Android</p>
-                <p class="text-sm text-gray-500 mt-0.5">{{ __('messages.home_both_platforms') }}</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Featured Projects --}}
-<section class="max-w-7xl mx-auto px-6 py-24">
-    <div class="flex items-end justify-between mb-12">
-        <div>
-            <p class="text-indigo-400 text-xs font-semibold tracking-widest uppercase mb-2">{{ __('messages.home_work_label') }}</p>
-            <h2 class="text-3xl font-black text-white">{{ __('messages.home_featured') }}</h2>
-        </div>
-        <a href="{{ route('projects.index') }}"
-           class="group inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-400 transition-colors pb-1">
-            {{ __('messages.home_view_all') }}
-            <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-        </a>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-5">
-        @forelse($featuredProjects as $project)
-        <a href="{{ route('projects.show', $project->slug) }}"
-           class="group relative rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-300 overflow-hidden">
-
-            {{-- Cover image --}}
-            @if($project->cover_image)
-                <div class="w-full h-44 overflow-hidden">
-                    <img src="{{ Storage::url($project->cover_image) }}"
-                         alt="{{ $project->title }}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                </div>
-            @endif
-
-            {{-- Card glow --}}
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                <div class="absolute -top-8 -left-8 w-48 h-48 rounded-full bg-indigo-600/10 blur-[60px]"></div>
-            </div>
-
-            <div class="relative p-7">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-700 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                    </svg>
-                </div>
-                <h3 class="text-white font-bold text-lg mb-2">{{ $project->title }}</h3>
-                <p class="text-sm text-gray-400 leading-relaxed mb-5">{{ $project->description }}</p>
-                @if($project->tags)
-                    <div class="flex gap-2 flex-wrap">
-                        @foreach($project->tags as $tag)
-                            <span class="text-xs px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-medium">{{ $tag }}</span>
-                        @endforeach
+                @if($project->cover_image)
+                    <div class="relative w-full h-48 overflow-hidden">
+                        <img src="{{ Storage::url($project->cover_image) }}"
+                             alt="{{ $project->title }}"
+                             class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-[900ms] ease-out">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
                     </div>
                 @endif
-            </div>
-        </a>
-        @empty
-        <div class="rounded-2xl border border-dashed border-white/[0.07] p-7 flex flex-col items-center justify-center gap-3 text-center col-span-2">
-            <p class="text-gray-600 text-sm">{{ __('messages.home_projects_soon') }}</p>
-        </div>
-        @endforelse
-    </div>
-</section>
 
-{{-- Admin shortcut (geliştirme kolaylığı - sonra kaldırılacak) --}}
-<div class="fixed bottom-6 right-6 z-50">
-    <a href="{{ route('admin.dashboard') }}"
-       class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900 border border-white/[0.1] text-gray-400 hover:text-white hover:border-indigo-500/50 text-xs font-medium transition-all shadow-xl">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        Admin Panel
-    </a>
-</div>
-
-{{-- CTA strip with inline chat --}}
-<section class="border-t border-white/5">
-    <div class="max-w-7xl mx-auto px-6 py-20">
-
-        {{-- Default CTA --}}
-        <div id="cta-default" class="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-                <h2 class="text-2xl font-black text-white mb-2">{{ __('messages.home_cta_title') }}</h2>
-                <p class="text-gray-500 text-sm">{{ __('messages.home_cta_sub') }}</p>
-            </div>
-            <button onclick="ctaOpenChat()"
-                    class="shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-950 rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                {{ __('messages.home_cta_btn') }}
-            </button>
-        </div>
-
-        {{-- Inline Chat Box --}}
-        <div id="cta-chat" class="hidden max-w-3xl mx-auto">
-            <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] overflow-hidden">
-
-                {{-- Chat Header --}}
-                <div class="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06]">
-                    <div class="w-9 h-9 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 001.591 1.591L21 14.5"/>
+                <div class="relative p-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <span class="mono text-[13px] text-zinc-600">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span class="h-px flex-1 bg-white/[0.07] group-hover:bg-white/20 transition-colors"></span>
+                        <svg class="w-4 h-4 text-zinc-600 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-white transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/>
                         </svg>
                     </div>
-                    <div>
-                        <p class="text-sm font-semibold text-white">Cihan's Assistant</p>
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-xs text-gray-500">Online</span>
+                    <h3 class="display text-white font-medium text-2xl mb-3">{{ $project->title }}</h3>
+                    <p class="text-[15px] text-zinc-400 leading-relaxed mb-6 line-clamp-3">{{ $project->description }}</p>
+                    @if($project->tags)
+                        <div class="flex gap-x-2 gap-y-1 flex-wrap mono text-[12px] text-zinc-500">
+                            @foreach($project->tags as $tag)
+                                <span class="text-zinc-400">{{ $tag }}</span>
+                                @if(!$loop->last)<span class="text-zinc-700">·</span>@endif
+                            @endforeach
                         </div>
-                    </div>
-                    <button onclick="ctaCloseChat()" class="ml-auto text-gray-600 hover:text-white transition-colors p-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
+                    @endif
                 </div>
+            </a>
+            @empty
+            <div class="reveal-up rounded-3xl border border-dashed border-white/[0.09] p-14 flex items-center justify-center col-span-2">
+                <p class="mono text-sm text-zinc-500">{{ __('messages.home_projects_soon') }}</p>
+            </div>
+            @endforelse
+        </div>
+    </section>
 
-                {{-- Messages --}}
-                <div id="cta-messages" class="px-5 py-4 space-y-3 overflow-y-auto" style="min-height: 380px; max-height: 520px;">
-                    <div class="flex gap-2.5">
-                        <div class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0 mt-0.5">
-                            <svg class="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/>
+    {{-- ── CTA + inline chat ─────────────────────────────────────────── --}}
+    <section class="relative border-t border-white/10" style="z-index:2;">
+        <div class="max-w-7xl mx-auto px-6 py-24">
+
+            {{-- Default CTA --}}
+            <div id="cta-default" class="reveal-up flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+                <div class="max-w-xl">
+                    <h2 class="display text-white font-semibold mb-4" style="font-size: clamp(2rem, 4vw, 3.2rem);">{{ __('messages.home_cta_title') }}</h2>
+                    <p class="text-zinc-400 text-lg leading-relaxed">{{ __('messages.home_cta_sub') }}</p>
+                </div>
+                <button onclick="ctaOpenChat()"
+                        class="group shrink-0 inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors">
+                    {{ __('messages.home_cta_btn') }}
+                    <span class="w-8 h-8 rounded-full bg-black flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+
+            {{-- Inline chat panel --}}
+            <div id="cta-chat" class="hidden max-w-3xl mx-auto">
+                <div class="rounded-3xl border border-white/[0.1] bg-white/[0.02] overflow-hidden backdrop-blur-sm">
+
+                    <div class="flex items-center gap-3 px-5 py-4 border-b border-white/[0.08]">
+                        <span class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                              style="background: linear-gradient(135deg,#22d3ee,#818cf8,#c084fc);">
+                            <svg class="w-4 h-4 text-black/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 001.591 1.591L21 14.5"/>
                             </svg>
+                        </span>
+                        <div>
+                            <p class="text-sm font-medium text-white">Cihan's Assistant</p>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span class="mono text-[11px] text-zinc-500">online</span>
+                            </div>
                         </div>
-                        <div class="bg-white/[0.05] border border-white/[0.06] rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm">
-                            <p class="text-sm text-gray-300 leading-relaxed">{{ __('messages.home_chat_welcome') }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Input --}}
-                <div class="px-4 py-3 border-t border-white/[0.06]">
-                    <div class="flex items-center gap-2">
-                        <input id="cta-input"
-                               type="text"
-                               placeholder="{{ __('messages.home_chat_placeholder') }}"
-                               class="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/50 transition-all">
-                        <button id="cta-send"
-                                class="w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center shrink-0 transition-colors disabled:opacity-50">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        <button onclick="ctaCloseChat()" class="ml-auto text-zinc-600 hover:text-white transition-colors p-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
+
+                    <div id="cta-messages" class="px-5 py-4 space-y-3 overflow-y-auto" style="min-height: 380px; max-height: 520px;">
+                        <div class="flex gap-2.5">
+                            <span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                                  style="background: linear-gradient(135deg,#22d3ee,#818cf8,#c084fc);">
+                                <svg class="w-3 h-3 text-black/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/></svg>
+                            </span>
+                            <div class="max-w-[85%] rounded-2xl rounded-tl-md border border-white/[0.07] bg-white/[0.03] px-4 py-2.5">
+                                <p class="text-[14px] text-zinc-300 leading-relaxed">{{ __('messages.home_chat_welcome') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-3 border-t border-white/[0.08]">
+                        <div class="flex items-center gap-2">
+                            <input id="cta-input" type="text"
+                                   placeholder="{{ __('messages.home_chat_placeholder') }}"
+                                   class="flex-1 px-4 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-white/25 transition-all">
+                            <button id="cta-send"
+                                    class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-opacity hover:opacity-90 disabled:opacity-50"
+                                    style="background: linear-gradient(135deg,#22d3ee,#818cf8,#c084fc);">
+                                <svg class="w-4 h-4 text-black/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
+    </section>
+
+    {{-- Admin shortcut (geliştirme kolaylığı - sonra kaldırılacak) --}}
+    <div class="fixed bottom-6 right-6" style="z-index:50;">
+        <a href="{{ route('admin.dashboard') }}"
+           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full mono text-[12px] text-zinc-400
+                  bg-white/[0.04] border border-white/[0.1] hover:text-white hover:border-white/30 transition-colors backdrop-blur-sm">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Admin Panel
+        </a>
     </div>
-</section>
+
+</div>
 
 <script>
+/* ── Animated dotted waves ──────────────────────────────────────────── */
+(function () {
+    const waves = Array.from(document.querySelectorAll('.wave'));
+    if (!waves.length) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const NS = 'http://www.w3.org/2000/svg';
+    const DOTS = 30, H = 24;
+
+    waves.forEach((svg, k) => {
+        const W = parseFloat(svg.getAttribute('data-w')) || 240;
+        svg.__phase = k * 1.3;
+        for (let i = 0; i < DOTS; i++) {
+            const dot = document.createElementNS(NS, 'circle');
+            dot.setAttribute('cx', ((i / (DOTS - 1)) * W).toFixed(1));
+            dot.setAttribute('cy', H / 2);
+            dot.setAttribute('r', 1.5);
+            dot.setAttribute('fill', 'currentColor');
+            svg.appendChild(dot);
+        }
+    });
+
+    function frame(t) {
+        for (const svg of waves) {
+            const dots = svg.childNodes;
+            for (let i = 0; i < dots.length; i++) {
+                const x = i / (dots.length - 1);
+                const s = Math.sin(x * Math.PI * 4 + t / 720 + svg.__phase);
+                dots[i].setAttribute('cy', (H / 2 + s * 5).toFixed(2));
+                dots[i].setAttribute('opacity', (0.3 + 0.7 * (0.5 + 0.5 * s)).toFixed(2));
+            }
+        }
+        requestAnimationFrame(frame);
+    }
+    if (!reduce) requestAnimationFrame(frame);
+})();
+
+/* ── Inline chat ────────────────────────────────────────────────────── */
 (function() {
     let ctaAnonId = localStorage.getItem('chat_anon_id');
     if (!ctaAnonId) {
@@ -272,11 +317,15 @@
         const div = document.createElement('div');
         div.className = 'flex gap-2.5' + (isUser ? ' justify-end' : '');
         div.innerHTML = isUser
-            ? `<div class="bg-indigo-600 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-sm"><p class="text-sm text-white leading-relaxed">${ctaEscape(content)}</p></div>`
-            : `<div class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0 mt-0.5">
-                <svg class="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/></svg>
-               </div>
-               <div class="bg-white/[0.05] border border-white/[0.06] rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-sm"><p class="text-sm text-gray-300 leading-relaxed">${ctaEscape(content)}</p></div>`;
+            ? `<div class="max-w-[85%] rounded-2xl rounded-tr-md bg-white text-black px-4 py-2.5">
+                 <p class="text-[14px] leading-relaxed">${ctaEscape(content)}</p>
+               </div>`
+            : `<span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:linear-gradient(135deg,#22d3ee,#818cf8,#c084fc)">
+                 <svg class="w-3 h-3" style="color:rgba(0,0,0,.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/></svg>
+               </span>
+               <div class="max-w-[85%] rounded-2xl rounded-tl-md border border-white/[0.07] bg-white/[0.03] px-4 py-2.5">
+                 <p class="text-[14px] leading-relaxed" style="color:#d4d4d8">${ctaEscape(content)}</p>
+               </div>`;
         msgs.appendChild(div);
         msgs.scrollTop = msgs.scrollHeight;
     }
@@ -286,14 +335,14 @@
         const div = document.createElement('div');
         div.id = 'cta-typing';
         div.className = 'flex gap-2.5';
-        div.innerHTML = `<div class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0 mt-0.5">
-            <svg class="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/></svg>
-        </div>
-        <div class="bg-white/[0.05] border border-white/[0.06] rounded-2xl rounded-tl-sm px-4 py-3">
+        div.innerHTML = `<span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:linear-gradient(135deg,#22d3ee,#818cf8,#c084fc)">
+            <svg class="w-3 h-3" style="color:rgba(0,0,0,.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5"/></svg>
+        </span>
+        <div class="rounded-2xl rounded-tl-md border border-white/[0.07] bg-white/[0.03] px-4 py-3">
             <div class="flex gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style="animation-delay:0ms"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style="animation-delay:150ms"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style="animation-delay:300ms"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-bounce" style="animation-delay:0ms"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-bounce" style="animation-delay:150ms"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-bounce" style="animation-delay:300ms"></span>
             </div>
         </div>`;
         msgs.appendChild(div);
