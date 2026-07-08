@@ -58,7 +58,7 @@
                             <span class="max-w-0 group-hover/sec:max-w-[170px] opacity-0 group-hover/sec:opacity-100
                                          overflow-hidden whitespace-nowrap transition-all duration-300 ease-out">
                                 <span class="pr-4 text-sm">
-                                    {{ $secondaryLabel === 'EN' ? 'Download EN version' : 'TR versiyonu indir' }}
+                                    {{ $secondaryLabel === 'EN' ? 'EN versiyonu indir' : 'Download TR version' }}
                                 </span>
                             </span>
                         </a>
