@@ -7,37 +7,69 @@
         <div class="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 space-y-5">
             <h2 class="text-sm font-bold text-white">Project Info</h2>
 
+            {{-- Title TR --}}
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Title *</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Title (TR) *</label>
                 <input type="text" name="title" value="{{ old('title', $project->title ?? '') }}"
                        class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all @error('title') border-red-500/50 @enderror"
                        placeholder="EduChamp">
                 @error('title') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Title EN --}}
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Short Description *</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Title (EN)</label>
+                <input type="text" name="title_en" value="{{ old('title_en', $project->title_en ?? '') }}"
+                       class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all @error('title_en') border-red-500/50 @enderror"
+                       placeholder="EduChamp">
+                @error('title_en') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
+                <p class="mt-1.5 text-xs text-gray-600">Boş bırakılırsa İngilizce sitede Türkçe başlık gösterilir</p>
+            </div>
+
+            {{-- Short Description TR --}}
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Short Description (TR) *</label>
                 <textarea name="description" rows="2"
                           class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all resize-none @error('description') border-red-500/50 @enderror"
                           placeholder="Kısa açıklama — proje kartlarında gösterilir">{{ old('description', $project->description ?? '') }}</textarea>
                 @error('description') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Short Description EN --}}
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Full Content</label>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Short Description (EN)</label>
+                <textarea name="description_en" rows="2"
+                          class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all resize-none @error('description_en') border-red-500/50 @enderror"
+                          placeholder="Short description — shown on project cards">{{ old('description_en', $project->description_en ?? '') }}</textarea>
+                @error('description_en') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Full Content TR --}}
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Full Content (TR)</label>
                 <textarea name="content" rows="8"
                           class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all resize-y @error('content') border-red-500/50 @enderror"
                           placeholder="Proje detay sayfasında gösterilecek uzun içerik...">{{ old('content', $project->content ?? '') }}</textarea>
                 @error('content') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Full Content EN --}}
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Full Content (EN)</label>
+                <textarea name="content_en" rows="8"
+                          class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all resize-y @error('content_en') border-red-500/50 @enderror"
+                          placeholder="Long content shown on the project detail page...">{{ old('content_en', $project->content_en ?? '') }}</textarea>
+                @error('content_en') <p class="mt-1.5 text-xs text-red-400">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Tags (dil bağımsız) --}}
             <div>
                 <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Tags</label>
                 <input type="text" name="tags"
                        value="{{ old('tags', isset($project) ? implode(', ', $project->tags ?? []) : '') }}"
                        class="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-gray-600 focus:outline-none focus:border-indigo-500/60 focus:bg-white/[0.06] transition-all"
                        placeholder="Flutter, GetX, Laravel">
-                <p class="mt-1.5 text-xs text-gray-600">Virgülle ayır</p>
+                <p class="mt-1.5 text-xs text-gray-600">Virgülle ayır · her dilde aynı</p>
             </div>
         </div>
 
