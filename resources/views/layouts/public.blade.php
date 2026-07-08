@@ -302,23 +302,18 @@
             els.forEach(e => io.observe(e));
         })();
 
-        /* Global particle field — animated on desktop/Android, STATIC on iOS/WebKit */
+        /* Global particle constellation — runs on any page with #hero-canvas */
         (function () {
             const c = document.getElementById('hero-canvas');
             if (!c) return;
             const ctx = c.getContext('2d');
             const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const coarse = window.matchMedia('(pointer: coarse)').matches;
-            // iOS (iPhone/iPad/iPod, incl. iPadOS masquerading as Mac) — WebKit composites a
-            // fixed, continuously-repainting canvas very poorly, so we render it once (static).
-            const iOS = /iP(hone|od|ad)/.test(navigator.userAgent) ||
-                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-            const STATIC = reduce || iOS;
-            let w = 0, h = 0, dpr = 1, lastW = -1, nodes = [], raf = null, mobile = false, paused = false;
+            let w = 0, h = 0, dpr = 1, nodes = [], raf = null, mobile = false, paused = false;
             const mouse = { x: -9999, y: -9999 };
 
             function isMobile() { return window.matchMedia('(max-width: 767px)').matches; }
-            function count() { return mobile ? 20 : 60; }
+            function count() { return mobile ? 18 : 60; }
             function resize() {
                 mobile = isMobile();
                 dpr = mobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
@@ -339,9 +334,12 @@
             }
             function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
             const cyan = [34, 211, 238], pink = [244, 114, 182];
-            function render() {
+            function draw() {
                 ctx.clearRect(0, 0, w, h);
                 for (const n of nodes) {
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > w) n.vx *= -1;
+                    if (n.y < 0 || n.y > h) n.vy *= -1;
                     const col = mix(cyan, pink, Math.min(1, n.x / w));
                     const bright = 0.25 + 0.6 * (n.x / w);
                     ctx.beginPath();
@@ -349,7 +347,8 @@
                     ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${bright.toFixed(2)})`;
                     ctx.fill();
                 }
-                if (!mobile && !STATIC) {
+                // connecting lines are the O(n^2) cost — desktop only
+                if (!mobile) {
                     for (let i = 0; i < nodes.length; i++) {
                         for (let j = i + 1; j < nodes.length; j++) {
                             const a = nodes[i], b = nodes[j];
@@ -370,40 +369,26 @@
                         }
                     }
                 }
+                raf = requestAnimationFrame(draw);
             }
-            function tick() {
-                for (const n of nodes) {
-                    n.x += n.vx; n.y += n.vy;
-                    if (n.x < 0 || n.x > w) n.vx *= -1;
-                    if (n.y < 0 || n.y > h) n.vy *= -1;
-                }
-                render();
-                raf = requestAnimationFrame(tick);
-            }
-            function start() { if (!raf && !paused && !STATIC) tick(); }
+            function start() { if (!raf && !paused) draw(); }
             function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
-            resize(); lastW = window.innerWidth; seed();
-            if (STATIC) render(); else start();
+            resize(); seed();
+            if (reduce) { draw(); stop(); } else start();
 
             let rt;
-            window.addEventListener('resize', function () {
-                // iOS toggles the URL bar -> height-only resize; ignore to avoid canvas thrash
-                if (window.innerWidth === lastW) return;
-                lastW = window.innerWidth;
-                clearTimeout(rt);
-                rt = setTimeout(function () { resize(); seed(); if (STATIC) render(); }, 150);
-            });
-            document.addEventListener('visibilitychange', function () {
+            window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); seed(); }, 150); });
+            document.addEventListener('visibilitychange', () => {
                 paused = document.hidden;
-                if (paused) stop(); else start();
+                if (paused) stop(); else if (!reduce) start();
             });
             if (!coarse) {
-                c.addEventListener('pointermove', function (e) {
+                c.addEventListener('pointermove', e => {
                     const rect = c.getBoundingClientRect();
                     mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
                 });
-                c.addEventListener('pointerleave', function () { mouse.x = -9999; mouse.y = -9999; });
+                c.addEventListener('pointerleave', () => { mouse.x = -9999; mouse.y = -9999; });
             }
         })();
 

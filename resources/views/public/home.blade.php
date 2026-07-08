@@ -311,7 +311,6 @@
     const ctaOpenBtn = document.getElementById('cta-open-btn');
     const ctaSection = document.getElementById('cta-section');
     const ctaReduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const ctaIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     let ctaOpen = false, ctaAnimating = false, ctaBtnOffset = null;
 
     if (ctaChat && ctaDefault) {
@@ -434,7 +433,7 @@
         if (ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
         ctaOpen = true; ctaAnimating = true;
 
-        if (!ctaFx || ctaReduce || ctaIOS){
+        if (!ctaFx || ctaReduce){
             ctaDefault.style.pointerEvents = 'none';
             await ctaCollapse(ctaDefault, 0);
             await ctaExpand(ctaChat, 0);
@@ -466,7 +465,7 @@
         if (!ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
         ctaOpen = false; ctaAnimating = true;
 
-        if (!ctaFx || ctaReduce || ctaIOS){
+        if (!ctaFx || ctaReduce){
             await ctaCollapse(ctaChat, 0);
             await ctaExpand(ctaDefault, 0);
             ctaDefault.style.pointerEvents = '';
