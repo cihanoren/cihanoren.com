@@ -37,7 +37,7 @@
                 </div>
 
                 @if($primaryCv)
-                <div class="boot b3 flex flex-col items-start md:items-end gap-2 shrink-0">
+                <div class="boot b3 flex items-center gap-3 shrink-0">
                     <a href="/{{ $primaryCv }}" target="_blank"
                        class="group inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors">
                         {{ __('messages.resume_download') }}
@@ -47,9 +47,20 @@
                             </svg>
                         </span>
                     </a>
+
                     @if($secondaryCv && $secondaryCv !== $primaryCv)
-                        <a href="/{{ $secondaryCv }}" target="_blank" class="mono text-xs text-zinc-500 hover:text-white underline">
-                            {{ $secondaryLabel }} version
+                        <a href="/{{ $secondaryCv }}" target="_blank"
+                           class="group/sec relative inline-flex items-center h-11 rounded-full border border-white/15 text-zinc-400
+                                  hover:text-white hover:border-white/40 hover:bg-white/[0.05] transition-colors overflow-hidden">
+                            <span class="flex items-center justify-center w-11 h-11 shrink-0 mono text-[11px] tracking-wide">
+                                {{ $secondaryLabel }}
+                            </span>
+                            <span class="max-w-0 group-hover/sec:max-w-[170px] opacity-0 group-hover/sec:opacity-100
+                                         overflow-hidden whitespace-nowrap transition-all duration-300 ease-out">
+                                <span class="pr-4 text-sm">
+                                    {{ $secondaryLabel === 'EN' ? 'Download EN version' : 'TR versiyonu indir' }}
+                                </span>
+                            </span>
                         </a>
                     @endif
                 </div>
