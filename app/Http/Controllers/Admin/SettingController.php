@@ -17,14 +17,27 @@ class SettingController extends Controller
         ];
     }
 
+    private function defaultStats(): array
+    {
+        return [
+            ['value' => '3+',            'label_tr' => 'YIL DENEYİM',        'label_en' => 'YEARS EXPERIENCE'],
+            ['value' => '10+',           'label_tr' => 'YAYINLANAN UYGULAMA', 'label_en' => 'APPS SHIPPED'],
+            ['value' => 'iOS & Android', 'label_tr' => 'HER İKİ PLATFORM',    'label_en' => 'BOTH PLATFORMS'],
+        ];
+    }
+
     public function index()
     {
         $settings = [
             'site_title'        => Setting::get('site_title', 'CihanÖren — Flutter Developer'),
             'meta_description'  => Setting::get('meta_description', 'Flutter mobile developer specializing in clean architecture and scalable apps.'),
-            'hero_title'        => Setting::get('hero_title', 'Flutter Developer & Mobile Architect'),
-            'hero_subtitle'     => Setting::get('hero_subtitle', 'I build clean, scalable mobile applications with Flutter — focused on architecture, performance, and great UX.'),
-            'hero_badge'        => Setting::get('hero_badge', 'Available for freelance work'),
+
+            'hero_badge_tr'     => Setting::get('hero_badge_tr', Setting::get('hero_badge', 'Freelance çalışmaya açık')),
+            'hero_badge_en'     => Setting::get('hero_badge_en', Setting::get('hero_badge', 'Available for freelance work')),
+            'hero_title_tr'     => Setting::get('hero_title_tr', Setting::get('hero_title', 'Flutter Geliştirici & Mobil Mimar')),
+            'hero_title_en'     => Setting::get('hero_title_en', Setting::get('hero_title', 'Flutter Developer & Mobile Architect')),
+            'hero_subtitle_tr'  => Setting::get('hero_subtitle_tr', Setting::get('hero_subtitle', 'Mimari, performans ve kullanıcı deneyimine odaklanan temiz ve ölçeklenebilir mobil uygulamalar geliştiriyorum.')),
+            'hero_subtitle_en'  => Setting::get('hero_subtitle_en', Setting::get('hero_subtitle', 'I build clean, scalable mobile applications with Flutter — focused on architecture, performance, and great UX.')),
 
             'about_title_tr'    => Setting::get('about_title_tr', __('messages.about_title')),
             'about_title2_tr'   => Setting::get('about_title2_tr', __('messages.about_title2')),
@@ -46,7 +59,12 @@ class SettingController extends Controller
             true
         ) ?: $this->defaultCategories();
 
-        return view('admin.settings.index', compact('settings', 'skillCategories'));
+        $homeStats = json_decode(
+            Setting::get('home_stats', json_encode($this->defaultStats())),
+            true
+        ) ?: $this->defaultStats();
+
+        return view('admin.settings.index', compact('settings', 'skillCategories', 'homeStats'));
     }
 
     public function update(Request $request)
@@ -54,9 +72,13 @@ class SettingController extends Controller
         $validated = $request->validate([
             'site_title'       => ['required', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
-            'hero_title'       => ['nullable', 'string', 'max:255'],
-            'hero_subtitle'    => ['nullable', 'string', 'max:500'],
-            'hero_badge'       => ['nullable', 'string', 'max:100'],
+
+            'hero_badge_tr'    => ['nullable', 'string', 'max:100'],
+            'hero_badge_en'    => ['nullable', 'string', 'max:100'],
+            'hero_title_tr'    => ['nullable', 'string', 'max:255'],
+            'hero_title_en'    => ['nullable', 'string', 'max:255'],
+            'hero_subtitle_tr' => ['nullable', 'string', 'max:500'],
+            'hero_subtitle_en' => ['nullable', 'string', 'max:500'],
 
             'about_title_tr'   => ['nullable', 'string', 'max:255'],
             'about_title2_tr'  => ['nullable', 'string', 'max:255'],
@@ -69,6 +91,11 @@ class SettingController extends Controller
             'categories.*.icon'         => ['nullable', 'string', 'max:50'],
             'categories.*.title'        => ['nullable', 'string', 'max:100'],
             'categories.*.skills'       => ['nullable', 'string'],
+
+            'stats'                     => ['nullable', 'array'],
+            'stats.*.value'             => ['nullable', 'string', 'max:50'],
+            'stats.*.label_tr'          => ['nullable', 'string', 'max:100'],
+            'stats.*.label_en'          => ['nullable', 'string', 'max:100'],
 
             'github_url'       => ['nullable', 'url', 'max:255'],
             'linkedin_url'     => ['nullable', 'url', 'max:255'],
@@ -86,8 +113,20 @@ class SettingController extends Controller
             ->values()
             ->all();
 
-        unset($validated['categories']);
+        // Home stats -> JSON
+        $stats = collect($request->input('stats', []))
+            ->filter(fn ($s) => !empty($s['value']))
+            ->map(fn ($s) => [
+                'value'    => $s['value'],
+                'label_tr' => $s['label_tr'] ?? '',
+                'label_en' => $s['label_en'] ?? '',
+            ])
+            ->values()
+            ->all();
+
+        unset($validated['categories'], $validated['stats']);
         $validated['skill_categories'] = json_encode($categories);
+        $validated['home_stats'] = json_encode($stats);
 
         Setting::setMany($validated);
 
