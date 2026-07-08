@@ -54,7 +54,7 @@
                         @if($project->cover_image)
                             <div class="relative w-full h-52 overflow-hidden">
                                 <img src="{{ Storage::url($project->cover_image) }}"
-                                     alt="{{ $project->title }}"
+                                     alt="{{ $project->localized_title }}"
                                      class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-[900ms] ease-out">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
                             </div>
@@ -68,8 +68,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/>
                                 </svg>
                             </div>
-                            <h3 class="display text-white font-medium text-2xl mb-3">{{ $project->title }}</h3>
-                            <p class="text-[15px] text-zinc-400 leading-relaxed mb-6 line-clamp-3">{{ $project->description }}</p>
+                            <h3 class="display text-white font-medium text-2xl mb-3">{{ $project->localized_title }}</h3>
+                            <p class="text-[15px] text-zinc-400 leading-relaxed mb-6 line-clamp-3">{{ $project->localized_description }}</p>
                             @if($project->tags)
                                 <div class="flex gap-x-2 gap-y-1 flex-wrap mono text-[12px] text-zinc-500">
                                     @foreach($project->tags as $tag)

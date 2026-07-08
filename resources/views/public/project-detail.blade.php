@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', $project->title . ' — CihanÖren')
-@section('description', $project->description)
+@section('title', $project->localized_title . ' — CihanÖren')
+@section('description', $project->localized_description)
 
 @section('content')
 
@@ -29,10 +29,10 @@
 
             <h1 class="boot b2 display font-semibold text-white leading-[0.98] mb-5 max-w-4xl"
                 style="font-size: clamp(2.6rem, 6.5vw, 5rem);">
-                {{ $project->title }}
+                {{ $project->localized_title }}
             </h1>
 
-            <p class="boot b3 text-zinc-300 text-lg leading-relaxed max-w-2xl">{{ $project->description }}</p>
+            <p class="boot b3 text-zinc-300 text-lg leading-relaxed max-w-2xl">{{ $project->localized_description }}</p>
 
             @if($project->tags)
                 <div class="boot b3 flex flex-wrap gap-2 mt-7">
@@ -56,14 +56,14 @@
                     @if($project->cover_image)
                         <div class="reveal-up w-full rounded-3xl overflow-hidden border border-white/[0.09] mb-10">
                             <img src="{{ Storage::url($project->cover_image) }}"
-                                 alt="{{ $project->title }}"
+                                 alt="{{ $project->localized_title }}"
                                  class="w-full object-cover max-h-[420px]">
                         </div>
                     @endif
 
-                    @if($project->content)
+                    @if($project->localized_content)
                         <div class="reveal-up text-[15px] md:text-base text-zinc-300 leading-relaxed">
-                            {!! nl2br(e($project->content)) !!}
+                            {!! nl2br(e($project->localized_content)) !!}
                         </div>
                     @endif
                 </div>

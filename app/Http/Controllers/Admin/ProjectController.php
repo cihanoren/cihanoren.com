@@ -25,18 +25,21 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'        => ['required', 'string', 'max:255'],
-            'description'  => ['required', 'string'],
-            'content'      => ['nullable', 'string'],
-            'tags'         => ['nullable', 'string'],
-            'project_url'  => ['nullable', 'url'],
-            'github_url'   => ['nullable', 'url'],
-            'appstore_url' => ['nullable', 'url'],
-            'playstore_url'=> ['nullable', 'url'],
-            'featured'     => ['boolean'],
-            'order'        => ['integer'],
-            'published'    => ['boolean'],
-            'cover_image'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'title'          => ['required', 'string', 'max:255'],
+            'title_en'       => ['nullable', 'string', 'max:255'],
+            'description'    => ['required', 'string'],
+            'description_en' => ['nullable', 'string'],
+            'content'        => ['nullable', 'string'],
+            'content_en'     => ['nullable', 'string'],
+            'tags'           => ['nullable', 'string'],
+            'project_url'    => ['nullable', 'url'],
+            'github_url'     => ['nullable', 'url'],
+            'appstore_url'   => ['nullable', 'url'],
+            'playstore_url'  => ['nullable', 'url'],
+            'featured'       => ['boolean'],
+            'order'          => ['integer'],
+            'published'      => ['boolean'],
+            'cover_image'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $validated['slug']      = Str::slug($validated['title']);
@@ -65,18 +68,21 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'title'        => ['required', 'string', 'max:255'],
-            'description'  => ['required', 'string'],
-            'content'      => ['nullable', 'string'],
-            'tags'         => ['nullable', 'string'],
-            'project_url'  => ['nullable', 'url'],
-            'github_url'   => ['nullable', 'url'],
-            'appstore_url' => ['nullable', 'url'],
-            'playstore_url'=> ['nullable', 'url'],
-            'featured'     => ['boolean'],
-            'order'        => ['integer'],
-            'published'    => ['boolean'],
-            'cover_image'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'title'          => ['required', 'string', 'max:255'],
+            'title_en'       => ['nullable', 'string', 'max:255'],
+            'description'    => ['required', 'string'],
+            'description_en' => ['nullable', 'string'],
+            'content'        => ['nullable', 'string'],
+            'content_en'     => ['nullable', 'string'],
+            'tags'           => ['nullable', 'string'],
+            'project_url'    => ['nullable', 'url'],
+            'github_url'     => ['nullable', 'url'],
+            'appstore_url'   => ['nullable', 'url'],
+            'playstore_url'  => ['nullable', 'url'],
+            'featured'       => ['boolean'],
+            'order'          => ['integer'],
+            'published'      => ['boolean'],
+            'cover_image'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $validated['slug']      = Str::slug($validated['title']);
