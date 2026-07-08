@@ -4,6 +4,40 @@
 
 @section('content')
 
+@php
+    $locale = app()->getLocale();
+    $aboutTitle  = Setting::get("about_title_{$locale}", __('messages.about_title'));
+    $aboutTitle2 = Setting::get("about_title2_{$locale}", __('messages.about_title2'));
+    $aboutSub    = Setting::get("about_sub_{$locale}", __('messages.about_sub'));
+
+    $defaultCategories = [
+        ['icon' => 'mobile',  'title' => 'Mobile',         'skills' => 'Flutter, Dart, iOS & Android, GetX, Clean Architecture'],
+        ['icon' => 'backend', 'title' => 'Backend & APIs', 'skills' => 'Laravel, REST APIs, Firebase'],
+        ['icon' => 'ai',      'title' => 'AI',             'skills' => 'LLM Integration, AI-Powered Apps'],
+    ];
+    $skillCategories = json_decode(Setting::get('skill_categories', json_encode($defaultCategories)), true) ?: $defaultCategories;
+
+    $categoryColors = [
+        ['22', '211', '238'],   // cyan
+        ['192', '132', '252'],  // purple
+        ['244', '114', '182'],  // pink
+        ['129', '140', '248'],  // indigo
+        ['52', '211', '153'],   // emerald
+        ['251', '191', '36'],   // amber
+    ];
+
+    $icons = [
+        'mobile'   => 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+        'backend'  => 'M5 12h14M12 5l7 7-7 7',
+        'ai'       => 'M13 10V3L4 14h7v7l9-11h-7z',
+        'code'     => 'M8 9l-4 3 4 3m8-6l4 3-4 3M14 4l-4 16',
+        'database' => 'M4 7c0-1.66 3.58-3 8-3s8 1.34 8 3-3.58 3-8 3-8-1.34-8-3zm0 0v10c0 1.66 3.58 3 8 3s8-1.34 8-3V7M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3',
+        'cloud'    => 'M3 15a4 4 0 004 4h10a4 4 0 001-7.874A5.5 5.5 0 007.5 8.5 4 4 0 003 15z',
+        'design'   => 'M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z',
+        'globe'    => 'M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18',
+    ];
+@endphp
+
 <div class="lux -mt-20">
 
     {{-- ambient --}}
@@ -22,10 +56,10 @@
             </div>
             <h1 class="boot b2 display font-semibold text-white leading-[0.98] mb-7 max-w-3xl"
                 style="font-size: clamp(2.6rem, 6.5vw, 5rem);">
-                {{ __('messages.about_title') }}
-                <span class="grad">{{ __('messages.about_title2') }}</span>
+                {{ $aboutTitle }}
+                <span class="grad">{{ $aboutTitle2 }}</span>
             </h1>
-            <p class="boot b3 text-zinc-300 text-lg max-w-xl leading-relaxed">{{ __('messages.about_sub') }}</p>
+            <p class="boot b3 text-zinc-300 text-lg max-w-xl leading-relaxed">{{ $aboutSub }}</p>
         </div>
     </section>
 
@@ -38,58 +72,30 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-                {{-- Mobile --}}
-                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(34,211,238,.12); border:1px solid rgba(34,211,238,.25);">
-                        <svg class="w-4 h-4" style="color:#22d3ee" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                        </svg>
+                @foreach($skillCategories as $i => $cat)
+                    @php
+                        [$r, $g, $b] = $categoryColors[$i % count($categoryColors)];
+                        $iconBg    = "background: rgba($r, $g, $b, 0.12); border: 1px solid rgba($r, $g, $b, 0.25);";
+                        $iconColor = "color: rgb($r, $g, $b);";
+                        $iconPath  = $icons[$cat['icon']] ?? $icons['code'];
+                        $chips     = array_filter(array_map('trim', explode(',', $cat['skills'])));
+                    @endphp
+                    <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="{{ $iconBg }}">
+                            <svg class="w-4 h-4" style="{{ $iconColor }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $iconPath }}"/>
+                            </svg>
+                        </div>
+                        <p class="display text-white font-medium text-lg mb-5">{{ $cat['title'] }}</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($chips as $s)
+                                <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
+                                    <span class="dot"></span>{{ $s }}
+                                </span>
+                            @endforeach
+                        </div>
                     </div>
-                    <p class="display text-white font-medium text-lg mb-5">Mobile</p>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['Flutter', 'Dart', 'iOS & Android', 'GetX', 'Clean Architecture'] as $s)
-                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
-                                <span class="dot"></span>{{ $s }}
-                            </span>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- Backend & APIs --}}
-                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(192,132,252,.12); border:1px solid rgba(192,132,252,.25);">
-                        <svg class="w-4 h-4" style="color:#c084fc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                    <p class="display text-white font-medium text-lg mb-5">Backend &amp; APIs</p>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['Laravel', 'REST APIs', 'Firebase'] as $s)
-                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
-                                <span class="dot"></span>{{ $s }}
-                            </span>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- AI --}}
-                <div class="card reveal-up rounded-3xl border border-white/[0.09] bg-white/[0.015] p-7 hover:bg-white/[0.03] transition-colors duration-500">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-6" style="background:rgba(244,114,182,.12); border:1px solid rgba(244,114,182,.25);">
-                        <svg class="w-4 h-4" style="color:#f472b6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    </div>
-                    <p class="display text-white font-medium text-lg mb-5">AI</p>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['LLM Integration', 'AI-Powered Apps'] as $s)
-                            <span class="skill-chip inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.02] mono text-[12px] text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors cursor-default">
-                                <span class="dot"></span>{{ $s }}
-                            </span>
-                        @endforeach
-                    </div>
-                </div>
-
+                @endforeach
             </div>
         </div>
     </section>

@@ -7,6 +7,15 @@
 {{-- favicon fallback --}}
 <script>(function(){var l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');document.head.appendChild(l);}l.rel='icon';l.type='image/png';l.href='/favicon.png';})();</script>
 
+@php
+    $locale = app()->getLocale();
+    $cvTr = Setting::get('cv_filename_tr', '');
+    $cvEn = Setting::get('cv_filename_en', '');
+    $primaryCv     = $locale === 'tr' ? ($cvTr ?: $cvEn) : ($cvEn ?: $cvTr);
+    $secondaryCv   = $locale === 'tr' ? $cvEn : $cvTr;
+    $secondaryLabel = $locale === 'tr' ? 'EN' : 'TR';
+@endphp
+
 <div class="lux -mt-20">
 
     {{-- ambient --}}
@@ -26,15 +35,25 @@
                     <h1 class="boot b2 display font-semibold text-white leading-[0.98]" style="font-size: clamp(2.6rem, 6vw, 4.6rem);">Cihan Ören</h1>
                     <p class="boot b3 mono text-zinc-400 mt-3 text-sm">Flutter Developer &amp; Mobile Architect</p>
                 </div>
-                <a href="/cv.pdf" target="_blank"
-                   class="boot b3 group shrink-0 inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors self-start">
-                    {{ __('messages.resume_download') }}
-                    <span class="w-8 h-8 rounded-full bg-black flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v4m0 0l-3-3m3 3l3-3M12 4v8"/>
-                        </svg>
-                    </span>
-                </a>
+
+                @if($primaryCv)
+                <div class="boot b3 flex flex-col items-start md:items-end gap-2 shrink-0">
+                    <a href="/{{ $primaryCv }}" target="_blank"
+                       class="group inline-flex items-center gap-2.5 pl-6 pr-2 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors">
+                        {{ __('messages.resume_download') }}
+                        <span class="w-8 h-8 rounded-full bg-black flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v4m0 0l-3-3m3 3l3-3M12 4v8"/>
+                            </svg>
+                        </span>
+                    </a>
+                    @if($secondaryCv && $secondaryCv !== $primaryCv)
+                        <a href="/{{ $secondaryCv }}" target="_blank" class="mono text-xs text-zinc-500 hover:text-white underline">
+                            {{ $secondaryLabel }} version
+                        </a>
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
     </section>
@@ -148,8 +167,15 @@
                 <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.resume_skills') }}</span>
             </div>
             @php
-                $skillsRaw = Setting::get('skills', 'Flutter, Clean Architecture, GetX, REST APIs, Firebase, iOS & Android, LLM Integration, AI-Powered Apps');
-                $skills = array_map('trim', explode(',', $skillsRaw));
+                $skillCategories = json_decode(Setting::get('skill_categories', '[]'), true) ?: [];
+                $skills = collect($skillCategories)
+                    ->flatMap(fn($c) => array_map('trim', explode(',', $c['skills'] ?? '')))
+                    ->filter()
+                    ->values();
+                if ($skills->isEmpty()) {
+                    $skills = collect(explode(',', Setting::get('skills', 'Flutter, Clean Architecture, GetX, REST APIs, Firebase, iOS & Android, LLM Integration, AI-Powered Apps')))
+                        ->map(fn($s) => trim($s));
+                }
             @endphp
             <div class="reveal-up flex flex-wrap gap-2">
                 @foreach($skills as $s)

@@ -7,7 +7,7 @@ return [
     'nav_about'    => 'About',
     'nav_projects' => 'Projects',
     'nav_resume'   => 'Resume',
-    'nav_hire'     => 'Hire Me',
+    'nav_hire'     => 'Contact Me',
 
     // Home
     'home_badge'        => 'Available for freelance work',
