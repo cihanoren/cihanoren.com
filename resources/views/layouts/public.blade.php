@@ -142,6 +142,19 @@
             .lux .reveal-up { opacity:1 !important; transform:none !important; }
             .lux .tl-line, .lux .tl-dot { transform:none !important; opacity:1 !important; }
         }
+
+        /* ── Mobile performance: drop the expensive compositing layers ── */
+        @media (max-width: 767px) {
+            .nav-pill, #nav-menu {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(0,0,0,.92) !important;
+            }
+            .lux .aurora { display: none !important; }   /* big blur() layers */
+            .lux .grain  { display: none !important; }   /* full-page overlay */
+            .lux .skill-chip .dot { animation: none !important; }  /* box-shadow repaint */
+            .lux .grad { animation: none !important; }   /* gradient-text repaint */
+        }
     </style>
 </head>
 <body id="top" class="bg-black text-zinc-100 antialiased">
@@ -152,7 +165,7 @@
     {{-- ── Floating pill navbar ──────────────────────────────────────── --}}
     <header class="fixed top-0 inset-x-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4">
-            <div class="flex items-center justify-between gap-4 h-14 pl-5 pr-2.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-xl shadow-[0_8px_40px_-16px_rgba(0,0,0,.9)]">
+            <div class="nav-pill flex items-center justify-between gap-4 h-14 pl-5 pr-2.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-xl shadow-[0_8px_40px_-16px_rgba(0,0,0,.9)]">
 
                 {{-- Logo --}}
                 <a href="{{ route('home') }}" class="ff-display text-lg font-semibold tracking-tight leading-none shrink-0">
@@ -289,17 +302,26 @@
             els.forEach(e => io.observe(e));
         })();
 
-        /* Global particle constellation — runs on any page with #hero-canvas */
+        /* Global particle field — animated on desktop/Android, STATIC on iOS/WebKit */
         (function () {
             const c = document.getElementById('hero-canvas');
             if (!c) return;
             const ctx = c.getContext('2d');
             const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            let w = 0, h = 0, dpr = 1, nodes = [], raf = null;
+            const coarse = window.matchMedia('(pointer: coarse)').matches;
+            // iOS (iPhone/iPad/iPod, incl. iPadOS masquerading as Mac) — WebKit composites a
+            // fixed, continuously-repainting canvas very poorly, so we render it once (static).
+            const iOS = /iP(hone|od|ad)/.test(navigator.userAgent) ||
+                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const STATIC = reduce || iOS;
+            let w = 0, h = 0, dpr = 1, lastW = -1, nodes = [], raf = null, mobile = false, paused = false;
             const mouse = { x: -9999, y: -9999 };
-            function count() { return window.innerWidth < 768 ? 32 : 64; }
+
+            function isMobile() { return window.matchMedia('(max-width: 767px)').matches; }
+            function count() { return mobile ? 20 : 60; }
             function resize() {
-                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                mobile = isMobile();
+                dpr = mobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
                 w = c.clientWidth; h = c.clientHeight;
                 c.width = w * dpr; c.height = h * dpr;
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -317,12 +339,9 @@
             }
             function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
             const cyan = [34, 211, 238], pink = [244, 114, 182];
-            function draw() {
+            function render() {
                 ctx.clearRect(0, 0, w, h);
                 for (const n of nodes) {
-                    n.x += n.vx; n.y += n.vy;
-                    if (n.x < 0 || n.x > w) n.vx *= -1;
-                    if (n.y < 0 || n.y > h) n.vy *= -1;
                     const col = mix(cyan, pink, Math.min(1, n.x / w));
                     const bright = 0.25 + 0.6 * (n.x / w);
                     ctx.beginPath();
@@ -330,35 +349,62 @@
                     ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${bright.toFixed(2)})`;
                     ctx.fill();
                 }
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const a = nodes[i], b = nodes[j];
-                        const dx = a.x - b.x, dy = a.y - b.y;
-                        const d = Math.hypot(dx, dy);
-                        if (d < 128) {
-                            ctx.strokeStyle = `rgba(150,160,220,${((1 - d / 128) * 0.16).toFixed(3)})`;
-                            ctx.lineWidth = .6;
-                            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+                if (!mobile && !STATIC) {
+                    for (let i = 0; i < nodes.length; i++) {
+                        for (let j = i + 1; j < nodes.length; j++) {
+                            const a = nodes[i], b = nodes[j];
+                            const dx = a.x - b.x, dy = a.y - b.y;
+                            const d = Math.hypot(dx, dy);
+                            if (d < 128) {
+                                ctx.strokeStyle = `rgba(150,160,220,${((1 - d / 128) * 0.16).toFixed(3)})`;
+                                ctx.lineWidth = .6;
+                                ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+                            }
+                        }
+                        const mx = nodes[i].x - mouse.x, my = nodes[i].y - mouse.y;
+                        const md = Math.hypot(mx, my);
+                        if (md < 150) {
+                            ctx.strokeStyle = `rgba(129,140,248,${((1 - md / 150) * 0.4).toFixed(3)})`;
+                            ctx.lineWidth = .7;
+                            ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
                         }
                     }
-                    const mx = nodes[i].x - mouse.x, my = nodes[i].y - mouse.y;
-                    const md = Math.hypot(mx, my);
-                    if (md < 150) {
-                        ctx.strokeStyle = `rgba(129,140,248,${((1 - md / 150) * 0.4).toFixed(3)})`;
-                        ctx.lineWidth = .7;
-                        ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
-                    }
                 }
-                raf = requestAnimationFrame(draw);
             }
-            resize(); seed();
-            if (reduce) { draw(); cancelAnimationFrame(raf); } else draw();
-            window.addEventListener('resize', () => { resize(); seed(); });
-            c.addEventListener('pointermove', e => {
-                const rect = c.getBoundingClientRect();
-                mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
+            function tick() {
+                for (const n of nodes) {
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > w) n.vx *= -1;
+                    if (n.y < 0 || n.y > h) n.vy *= -1;
+                }
+                render();
+                raf = requestAnimationFrame(tick);
+            }
+            function start() { if (!raf && !paused && !STATIC) tick(); }
+            function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+            resize(); lastW = window.innerWidth; seed();
+            if (STATIC) render(); else start();
+
+            let rt;
+            window.addEventListener('resize', function () {
+                // iOS toggles the URL bar -> height-only resize; ignore to avoid canvas thrash
+                if (window.innerWidth === lastW) return;
+                lastW = window.innerWidth;
+                clearTimeout(rt);
+                rt = setTimeout(function () { resize(); seed(); if (STATIC) render(); }, 150);
             });
-            c.addEventListener('pointerleave', () => { mouse.x = -9999; mouse.y = -9999; });
+            document.addEventListener('visibilitychange', function () {
+                paused = document.hidden;
+                if (paused) stop(); else start();
+            });
+            if (!coarse) {
+                c.addEventListener('pointermove', function (e) {
+                    const rect = c.getBoundingClientRect();
+                    mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
+                });
+                c.addEventListener('pointerleave', function () { mouse.x = -9999; mouse.y = -9999; });
+            }
         })();
 
         (function () {

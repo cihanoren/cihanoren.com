@@ -278,6 +278,7 @@
         }
     });
 
+    const wStatic = reduce || window.matchMedia('(max-width: 767px)').matches;
     function frame(t) {
         for (const svg of waves) {
             const dots = svg.childNodes;
@@ -288,9 +289,9 @@
                 dots[i].setAttribute('opacity', (0.3 + 0.7 * (0.5 + 0.5 * s)).toFixed(2));
             }
         }
-        requestAnimationFrame(frame);
+        if (!wStatic) requestAnimationFrame(frame);
     }
-    if (!reduce) requestAnimationFrame(frame);
+    if (wStatic) frame(1200); else requestAnimationFrame(frame);
 })();
 
 /* ── Inline chat ────────────────────────────────────────────────────── */
@@ -310,6 +311,7 @@
     const ctaOpenBtn = document.getElementById('cta-open-btn');
     const ctaSection = document.getElementById('cta-section');
     const ctaReduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctaIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     let ctaOpen = false, ctaAnimating = false, ctaBtnOffset = null;
 
     if (ctaChat && ctaDefault) {
@@ -349,7 +351,7 @@
 
     function fxResize(){
         if (!ctaFx) return;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const dpr = window.matchMedia('(max-width: 767px)').matches ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         fxW = window.innerWidth; fxH = window.innerHeight;
         ctaFx.width = fxW * dpr; ctaFx.height = fxH * dpr;
         fxCtx = ctaFx.getContext('2d');
@@ -432,7 +434,7 @@
         if (ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
         ctaOpen = true; ctaAnimating = true;
 
-        if (!ctaFx || ctaReduce){
+        if (!ctaFx || ctaReduce || ctaIOS){
             ctaDefault.style.pointerEvents = 'none';
             await ctaCollapse(ctaDefault, 0);
             await ctaExpand(ctaChat, 0);
@@ -464,7 +466,7 @@
         if (!ctaOpen || ctaAnimating || !ctaChat || !ctaDefault) return;
         ctaOpen = false; ctaAnimating = true;
 
-        if (!ctaFx || ctaReduce){
+        if (!ctaFx || ctaReduce || ctaIOS){
             await ctaCollapse(ctaChat, 0);
             await ctaExpand(ctaDefault, 0);
             ctaDefault.style.pointerEvents = '';
