@@ -33,7 +33,7 @@
                         <span class="mono text-[12px] tracking-[0.18em] uppercase text-zinc-400">{{ __('messages.resume_label') }}</span>
                     </div>
                     <h1 class="boot b2 display font-semibold text-white leading-[0.98]" style="font-size: clamp(2.6rem, 6vw, 4.6rem);">Cihan Ören</h1>
-                    <p class="boot b3 mono text-zinc-400 mt-3 text-sm">Flutter Developer &amp; Mobile Architect</p>
+                    <p class="boot b3 mono text-zinc-400 mt-3 text-sm">Software Developer &amp; Mobile Architect</p>
                 </div>
 
                 @if($primaryCv)
