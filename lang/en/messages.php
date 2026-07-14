@@ -44,7 +44,7 @@ return [
 
     // Projects
     'projects_label'    => 'Projects',
-    'projects_title'    => "Things I've built.",
+    'projects_title'    => "Things I've built",
     'projects_sub'      => 'A collection of mobile apps, tools, and experiments.',
     'projects_soon'     => 'Projects coming soon...',
 

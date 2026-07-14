@@ -44,7 +44,7 @@ return [
 
     // Projects
     'projects_label'    => 'Projeler',
-    'projects_title'    => 'Geliştirdiğim şeyler.',
+    'projects_title'    => 'Geliştirdiğim şeyler',
     'projects_sub'      => 'Mobil uygulamalar, araçlar ve deneyler.',
     'projects_soon'     => 'Projeler yakında...',
 
