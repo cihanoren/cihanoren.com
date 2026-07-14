@@ -82,7 +82,7 @@ class ProjectController extends Controller
             'featured'       => ['boolean'],
             'order'          => ['integer'],
             'published'      => ['boolean'],
-            'cover_image'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'cover_image'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $validated['slug']      = Str::slug($validated['title']);
