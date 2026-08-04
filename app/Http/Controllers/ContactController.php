@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Notifications\NewMessageNotification;
+use App\Rules\RecaptchaRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -20,7 +21,11 @@ class ContactController extends Controller
             'name'    => ['required', 'string', 'max:255'],
             'email'   => ['required', 'email', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],
+            'recaptcha_token' => ['required', new RecaptchaRule],
         ]);
+
+        // reCAPTCHA alanını DB kaydından çıkar
+        unset($validated['recaptcha_token']);
 
         // DB'ye kaydet
         $message = Message::create($validated);
@@ -53,7 +58,7 @@ class ContactController extends Controller
                 </div>
             ', function ($mail) use ($message) {
                 $mail->to($message->email, $message->name)
-                     ->subject('Mesajınız alındı — Cihan Ören');
+                    ->subject('Mesajınız alındı — Cihan Ören');
             });
         } catch (\Exception $e) {
             \Log::error('Onay maili gönderilemedi: ' . $e->getMessage());

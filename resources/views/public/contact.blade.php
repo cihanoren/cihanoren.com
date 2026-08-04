@@ -7,6 +7,9 @@
 {{-- favicon fallback --}}
 <script>(function(){var l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');document.head.appendChild(l);}l.rel='icon';l.type='image/png';l.href='/favicon.png';})();</script>
 
+{{-- reCAPTCHA v3 --}}
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
 <div class="lux -mt-20">
 
     {{-- ambient --}}
@@ -46,8 +49,15 @@
                         </div>
                     @endif
 
+                    @error('recaptcha_token')
+                        <div class="mb-6 flex items-center gap-3 px-4 py-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
                     <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contact-form">
                         @csrf
+                        <input type="hidden" name="recaptcha_token" id="recaptcha_token">
 
                         <div>
                             <label class="block mono text-[11px] font-medium text-zinc-400 uppercase tracking-wide mb-2">{{ __('messages.contact_name') }}</label>
@@ -89,6 +99,12 @@
                                 {{ __('messages.contact_sending') }}
                             </span>
                         </button>
+
+                        <p class="text-[11px] text-zinc-600 text-center leading-relaxed">
+                            This site is protected by reCAPTCHA and the Google
+                            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="underline hover:text-zinc-400">Privacy Policy</a> and
+                            <a href="https://policies.google.com/terms" target="_blank" rel="noopener" class="underline hover:text-zinc-400">Terms of Service</a> apply.
+                        </p>
                     </form>
                 </div>
 
@@ -141,13 +157,34 @@
 </div>
 
 <script>
-document.getElementById('contact-form').addEventListener('submit', function() {
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    // Token zaten alınmışsa (recursive submit sırasında) bırak geçsin.
+    if (document.getElementById('recaptcha_token').value) {
+        return;
+    }
+
+    e.preventDefault();
+
     const btn = document.getElementById('submit-btn');
     const btnText = document.getElementById('btn-text');
     const btnLoading = document.getElementById('btn-loading');
     btn.disabled = true;
     btnText.classList.add('hidden');
     btnLoading.classList.remove('hidden');
+
+    grecaptcha.ready(function() {
+        grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', {action: 'contact'})
+            .then(function(token) {
+                document.getElementById('recaptcha_token').value = token;
+                document.getElementById('contact-form').submit(); // native submit, event tekrar tetiklenmez
+            })
+            .catch(function() {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+                alert('Doğrulama başlatılamadı, lütfen sayfayı yenileyip tekrar deneyin.');
+            });
+    });
 });
 </script>
 
